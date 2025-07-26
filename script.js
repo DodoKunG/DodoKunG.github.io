@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const instagramGallery = document.getElementById('instagram-gallery');
     const instagramImages = [
         // เปลี่ยน URL เหล่านี้เป็นรูปภาพ Instagram ของคุณ
-        'https://www.instagram.com/p/DKeClaoSEoB/?img_index=1',
+        'POST /<DodoKunG>/media',
         'https://via.placeholder.com/150/33FF57/FFFFFF?text=InstaPic2',
         'https://via.placeholder.com/150/3357FF/FFFFFF?text=InstaPic3',
         'https://via.placeholder.com/150/FF33A1/FFFFFF?text=InstaPic4',
