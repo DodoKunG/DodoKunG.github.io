@@ -3,59 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เว็บไซต์ของโดโด้</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            text-align: center;
-        }
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 1em 0;
-        }
-        .container {
-            padding: 20px;
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            line-height: 1.6;
-        }
-        footer {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #333;
-            color: white;
-            font-size: 0.9em;
-        }
-    </style>
+    <title>Social Media ของโดโด้</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>สวัสดีครับ! นี่คือเว็บไซต์ของโดโด้</h1>
-    </header>
-
     <div class="container">
-        <h2>ยินดีต้อนรับสู่เว็บเพจง่ายๆ ของผม!</h2>
-        <p>ผมชื่อโดโด้ครับ! นี่คือเว็บไซต์ที่ผมสร้างขึ้นเพื่อทดลองใช้งาน GitHub Pages.</p>
-        <p>คุณสามารถเพิ่มเนื้อหา รูปภาพ หรือลิงก์ต่างๆ ที่นี่ได้เลยครับ.</p>
-        <p>ลองแก้ไขโค้ด HTML และ CSS เพื่อปรับแต่งเว็บไซต์ของคุณดูนะครับ!</p>
+        <div class="profile-section">
+            <img src="your-profile-picture.jpg" alt="รูปโปรไฟล์โดโด้" class="profile-pic">
+            <h1>โดโด้</h1>
+            <p>สวัสดีครับ! ยินดีต้อนรับสู่พื้นที่รวมลิงก์โซเชียลมีเดียของผม</p>
+        </div>
+
+        <div class="social-links">
+            <a href="https://www.instagram.com/your_instagram" target="_blank" class="social-button instagram">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
+            <a href="https://twitter.com/your_twitter" target="_blank" class="social-button twitter">
+                <i class="fab fa-twitter"></i> Twitter
+            </a>
+            <a href="https://discord.gg/your_discord_invite" target="_blank" class="social-button discord">
+                <i class="fab fa-discord"></i> Discord
+            </a>
+            <a href="https://www.youtube.com/your_youtube_channel" target="_blank" class="social-button youtube">
+                <i class="fab fa-youtube"></i> YouTube
+            </a>
+            <a href="https://www.tiktok.com/@your_tiktok" target="_blank" class="social-button tiktok">
+                <i class="fab fa-tiktok"></i> TikTok
+            </a>
+            </div>
+
+        <div class="instagram-feed">
+            <h2>รูปภาพล่าสุดจาก Instagram</h2>
+            <div class="gallery" id="instagram-gallery">
+                <img src="https://via.placeholder.com/150/FF5733/FFFFFF?text=InstaPic1" alt="Instagram Post 1">
+                <img src="https://via.placeholder.com/150/33FF57/FFFFFF?text=InstaPic2" alt="Instagram Post 2">
+                <img src="https://via.placeholder.com/150/3357FF/FFFFFF?text=InstaPic3" alt="Instagram Post 3">
+                <img src="https://via.placeholder.com/150/FF33A1/FFFFFF?text=InstaPic4" alt="Instagram Post 4">
+            </div>
+            <p class="note">**หมายเหตุ:** การดึงรูปภาพ Instagram สดๆ ต้องใช้ API และการตั้งค่าที่ซับซ้อนขึ้น ตัวอย่างนี้เป็นการจำลอง</p>
+        </div>
     </div>
 
-    <footer>
-        <p>&copy; 2025 โดโด้. สงวนลิขสิทธิ์.</p>
-        <p>สร้างด้วย ❤️ บน GitHub Pages</p>
-    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
