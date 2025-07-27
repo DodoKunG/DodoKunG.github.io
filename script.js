@@ -14,90 +14,97 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const convertedText = convertToListToNewTemplate(rawText, author);
-        outputArea.innerHTML = convertedText.split('\n').map(line => `<span class="output-line">${line}</span>`).join('<br>');
+        // แสดงผลลัพธ์ โดยแต่ละบรรทัดที่ได้จากฟังก์ชันจะถูกครอบด้วย span และขึ้นบรรทัดใหม่
+        outputArea.innerHTML = convertedText.split('\n').map(line => {
+            // เราจะใช้ <br> เพื่อขึ้นบรรทัดใหม่ใน HTML
+            // และใช้ white-space: pre-wrap ใน CSS เพื่อควบคุมการแสดงผล
+            if (line.trim() === '') { // บรรทัดว่างเปล่า
+                return '<br>';
+            }
+            return `<span class="output-line">${line}</span>`;
+        }).join(''); // ไม่ต้องมีตัวคั่นอีก เพราะ <br> จัดการแล้ว
     });
 
+    /**
+     * แปลงข้อความจากรูปแบบลิสต์ (* รายการ) เป็นรูปแบบหัวข้อ / เนื้อหา
+     * @param {string} text - ข้อความต้นฉบับ
+     * @param {string} author - ชื่อผู้เขียนสำหรับส่วน By
+     * @returns {string} ข้อความที่ถูกแปลงแล้วในรูปแบบที่ต้องการ
+     */
     function convertToListToNewTemplate(text, author) {
-        let resultText = [];
-
+        let resultLines = []; // เก็บแต่ละบรรทัดของผลลัพธ์
+        
         // แบ่งข้อความเป็นบล็อกตาม '------------'
-        const blocks = text.split('------------').map(block => block.trim()).filter(block => block.length > 0);
+        // ใช้ /\s*------------\s*/ เพื่อรองรับช่องว่างรอบๆ เส้นคั่น
+        const blocks = text.split(/\s*------------\s*/).map(block => block.trim()).filter(block => block.length > 0);
 
-        blocks.forEach(block => {
+        blocks.forEach((block, index) => {
             const lines = block.split('\n').map(line => line.trim()).filter(line => line.length > 0);
             if (lines.length === 0) return;
 
-            // บรรทัดแรกคือหัวข้อ
-            const titleLine = lines[0];
-            let listItems = lines.slice(1); // ที่เหลือคือรายการลิสต์
+            const titleLine = lines[0]; // บรรทัดแรกคือหัวข้อ
+            const listItems = lines.slice(1); // ที่เหลือคือรายการลิสต์
 
             let newTitle = '';
             let newContent = '';
+            
+            // Regex เพื่อจับส่วนนำหน้าหัวข้อและตัวเลขท้ายหัวข้อ
+            // เช่น "ในไพรสน วนหากิน 08" -> prefix="ในไพรสน วนหากิน", number="08"
+            const titlePattern = /^(.*?)\s*(\d+)$/;
+            const titleMatch = titleLine.match(titlePattern);
 
-            // Regex สำหรับหัวข้อ "ในไพรสน วนหากิน 08"
-            const pattern1 = /^(ในไพรสน วนหากิน)\s*(\d+)$/;
-            // Regex สำหรับหัวข้อ "ไม่สนคนมอง พวกพ้องมากมี 19"
-            const pattern2 = /^(ไม่สนคนมอง พวกพ้องมากมี)\s*(\d+)$/;
-
-            let match;
-            if ((match = titleLine.match(pattern1))) {
-                const prefix = match[1]; // "ในไพรสน วนหากิน"
-                const number = match[2]; // "08"
-                newTitle = `${prefix} ซ.${number} By ${author}`;
-
-                // จัดการลิสต์รายการ: รายการที่ 1 / รายการที่ 2 / รายการที่ 3 รายการที่ 4
-                // ลบ * ออกจากทุกรายการ
-                listItems = listItems.map(item => item.replace(/^\*\s*/, ''));
-
-                if (listItems.length >= 4) {
-                    newContent = `${listItems[0]} / ${listItems[1]} / ${listItems[2]} ${listItems[3]}`;
-                } else if (listItems.length > 0) {
-                    newContent = listItems.join(' / '); // กรณีมีน้อยกว่า 4 รายการ
+            if (titleMatch) {
+                const prefix = titleMatch[1];
+                const number = titleMatch[2];
+                const typePrefix = (index === 0) ? 'ซ.' : 'ย.'; // บล็อกแรกใช้ ซ. บล็อกที่สองใช้ ย.
+                
+                newTitle = `${prefix} ${typePrefix}${number}`;
+                if (index === 0) { // เฉพาะบล็อกแรกเท่านั้นที่จะมี "By ชื่อใครก็ได้"
+                    newTitle += ` By ${author}`;
                 }
-
-            } else if ((match = titleLine.match(pattern2))) {
-                const prefix = match[1]; // "ไม่สนคนมอง พวกพ้องมากมี"
-                const number = match[2]; // "19"
-                newTitle = `${prefix} ย.${number}`;
-
-                // จัดการลิสต์รายการ: ทุกคนเรียกว่าพ่อ / 14 อีกครั้ง / เบี้ยแหม็ดต้องเติม / กินได้ไม่เบื่อ
-                // ลบ * ออกจากทุกรายการ
-                listItems = listItems.map(item => item.replace(/^\*\s*/, ''));
-                newContent = listItems.join(' / '); // รวมทุกรายการด้วย /
-
             } else {
-                // หากไม่ตรงกับ pattern ที่คาดไว้ ให้ใส่เป็นข้อความเดิม
-                newTitle = titleLine;
-                newContent = listItems.join('\n'); // เก็บลิสต์ไว้เหมือนเดิม
+                // กรณีที่ไม่ตรงกับรูปแบบหัวข้อที่คาดไว้
+                newTitle = titleLine; // ใช้หัวข้อเดิม
             }
 
-            // เพิ่มส่วนหัวข้อ
-            resultText.push(`<span class="output-title">${newTitle}</span>`);
+            // จัดการรายการลิสต์: ใส่ / หลังทุกรายการยกเว้นรายการสุดท้าย
+            if (listItems.length > 0) {
+                const cleanedItems = listItems.map(item => item.replace(/^\*\s*/, '').trim()); // ลบ * และ trim
+                
+                // สร้างสตริงเนื้อหาโดยใส่ '/' หลังทุกรายการยกเว้นรายการสุดท้าย
+                newContent = cleanedItems.join(' / ');
+            } else {
+                newContent = "ไม่พบรายการ";
+            }
 
-            // เพิ่มเนื้อหา โดยจัดการเรื่องความยาว
-            const MAX_CHARS_PER_LINE = 80; // กำหนดความยาวสูงสุดต่อบรรทัด (ปรับได้ตามต้องการ)
-            let currentLine = '';
-            const words = newContent.split(' ');
+            // เพิ่มหัวข้อลงในผลลัพธ์
+            resultLines.push(newTitle);
 
-            for (let i = 0; i < words.length; i++) {
-                if ((currentLine + words[i]).length > MAX_CHARS_PER_LINE && currentLine.length > 0) {
-                    resultText.push(currentLine.trim());
-                    currentLine = words[i] + ' ';
+            // เพิ่มเนื้อหาลงในผลลัพธ์ พร้อมจัดการการขึ้นบรรทัดใหม่เมื่อยาวเกิน
+            const MAX_CHARS_PER_LINE = 80; // กำหนดความยาวสูงสุดต่อบรรทัด (ปรับได้)
+            let currentLineBuffer = '';
+            const wordsInContent = newContent.split(' ');
+
+            for (let i = 0; i < wordsInContent.length; i++) {
+                const word = wordsInContent[i];
+                if ((currentLineBuffer + word).length > MAX_CHARS_PER_LINE && currentLineBuffer.length > 0) {
+                    resultLines.push(currentLineBuffer.trim());
+                    currentLineBuffer = word + ' ';
                 } else {
-                    currentLine += words[i] + ' ';
+                    currentLineBuffer += word + ' ';
                 }
             }
-            if (currentLine.trim().length > 0) {
-                resultText.push(currentLine.trim());
+            if (currentLineBuffer.trim().length > 0) {
+                resultLines.push(currentLineBuffer.trim());
             }
 
-            resultText.push(''); // เพิ่มบรรทัดว่างคั่นระหว่างบล็อก
+            // เพิ่มบรรทัดว่างคั่นระหว่างบล็อก ถ้าไม่ใช่บล็อกสุดท้าย
+            if (index < blocks.length - 1) {
+                resultLines.push(''); 
+            }
         });
 
-        // เข้ารหัส HTML entities เพื่อป้องกัน XSS และแสดงผลข้อความดิบได้ถูกต้อง
-        // แต่เนื่องจากเราใส่ span ไปแล้ว อาจจะไม่จำเป็นต้องทำอีกรอบ
-        // return resultText.join('\n'); // คืนค่าเป็นสตริง โดยแต่ละองค์ประกอบจะขึ้นบรรทัดใหม่
-        return resultText.join('\n');
+        // รวมทุกบรรทัดด้วย \n เพื่อให้ง่ายต่อการแตกใน HTML ด้วย <br>
+        return resultLines.join('\n');
     }
-});
 });
