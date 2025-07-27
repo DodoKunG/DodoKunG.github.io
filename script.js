@@ -1,149 +1,103 @@
 document.addEventListener('DOMContentLoaded', () => {
     const inputText = document.getElementById('inputText');
+    const authorNameInput = document.getElementById('authorName');
     const convertButton = document.getElementById('convertButton');
     const outputArea = document.getElementById('outputArea');
 
     convertButton.addEventListener('click', () => {
         const rawText = inputText.value.trim();
+        const author = authorNameInput.value.trim();
+
         if (!rawText) {
             outputArea.innerHTML = '<p style="color: red;">กรุณาป้อนข้อความก่อนครับ</p>';
             return;
         }
 
-        const convertedHtml = convertTextToTemplate(rawText);
-        outputArea.innerHTML = convertedHtml;
+        const convertedText = convertToListToNewTemplate(rawText, author);
+        outputArea.innerHTML = convertedText.split('\n').map(line => `<span class="output-line">${line}</span>`).join('<br>');
     });
 
-    // ฟังก์ชันหลักในการแปลงข้อความ
-    function convertTextToTemplate(text) {
-        let htmlContent = '';
+    function convertToListToNewTemplate(text, author) {
+        let resultText = [];
 
-        // *** ส่วนที่ 1: ดึงข้อมูลจากบรรทัดแรก (คล้ายภาพที่สอง) ***
-        const mainHeaderRegex = /หลบหลีกคน วนอยู่ในป่า\s*(?:ซ\.)?(\d+)\s*by\s*([ก-ฮะ-์a-zA-Z\s]+)/;
-        const mainSubtitle1Regex = /น้ำหวานอาบยาพิษ\s*\/\s*เหยี่ยวเวหา\s*\/\s*ตาก/;
-        const mainSubtitle2Regex = /ตามราวผ้า\s*\/\s*เปิดขายตลอดเวลา/;
+        // แบ่งข้อความเป็นบล็อกตาม '------------'
+        const blocks = text.split('------------').map(block => block.trim()).filter(block => block.length > 0);
 
-        // *** ส่วนที่ 2: ดึงข้อมูลจากส่วน "ในไพรสน วนหากิน 08" ***
-        const section1TitleRegex = /ในไพรสน วนหากิน\s*(\d+)\s*\n\*([^\n]+)\n\*([^\n]+)\n\*([^\n]+)\n\*([^\n]+)/;
+        blocks.forEach(block => {
+            const lines = block.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            if (lines.length === 0) return;
 
-        // *** ส่วนที่ 3: ดึงข้อมูลจากส่วน "เที่ยวทนในไพร มาไปในน้ำ ย.29" ***
-        const section2TitleRegex = /เที่ยวทนในไพร มาไปในน้ำ\s*(?:ย\.)?(\d+)/;
-        const section2Subtitle1Regex = /ลพบุรีมีลุย\s*\/\s*มีเขี้ยวขอไว้ล่อเหยื่อ\s*\/\s*ชักยึด/;
-        const section2Subtitle2Regex = /ชักไย\s*\/\s*นกแอ่นเล่นลม/;
+            // บรรทัดแรกคือหัวข้อ
+            const titleLine = lines[0];
+            let listItems = lines.slice(1); // ที่เหลือคือรายการลิสต์
 
-        // *** ส่วนที่ 4: ดึงข้อมูลจากส่วน "ไม่สนคนมอง พวกพ้อง มากมี 19" ***
-        const section3TitleRegex = /ไม่สนคนมอง พวกพ้อง มากมี\s*(\d+)\s*\n\*([^\n]+)\n\*([^\n]+)\n\*([^\n]+)\n\*([^\n]+)/;
+            let newTitle = '';
+            let newContent = '';
 
+            // Regex สำหรับหัวข้อ "ในไพรสน วนหากิน 08"
+            const pattern1 = /^(ในไพรสน วนหากิน)\s*(\d+)$/;
+            // Regex สำหรับหัวข้อ "ไม่สนคนมอง พวกพ้องมากมี 19"
+            const pattern2 = /^(ไม่สนคนมอง พวกพ้องมากมี)\s*(\d+)$/;
 
-        // --- เริ่มต้นสร้าง HTML ---
-        htmlContent += '<header>';
+            let match;
+            if ((match = titleLine.match(pattern1))) {
+                const prefix = match[1]; // "ในไพรสน วนหากิน"
+                const number = match[2]; // "08"
+                newTitle = `${prefix} ซ.${number} By ${author}`;
 
-        const mainHeaderMatch = text.match(mainHeaderRegex);
-        if (mainHeaderMatch) {
-            const chapterNum = mainHeaderMatch[1] || '';
-            const author = mainHeaderMatch[2] || '';
-            htmlContent += `<h1 class="main-title">หลบหลีกคน วนอยู่ในป่า <span class="chapter-info">ซ.${chapterNum} by ${author.trim()}</span></h1>`;
-        } else {
-            htmlContent += `<h1 class="main-title">ไม่พบหัวข้อหลัก <span class="chapter-info">by โดโด้</span></h1>`;
-        }
+                // จัดการลิสต์รายการ: รายการที่ 1 / รายการที่ 2 / รายการที่ 3 รายการที่ 4
+                // ลบ * ออกจากทุกรายการ
+                listItems = listItems.map(item => item.replace(/^\*\s*/, ''));
 
-        const mainSubtitle1Match = text.match(mainSubtitle1Regex);
-        if (mainSubtitle1Match) {
-            htmlContent += `<p class="subtitle">น้ำหวานอาบยาพิษ / เหยี่ยวเวหา / ตาก</p>`;
-        }
-        const mainSubtitle2Match = text.match(mainSubtitle2Regex);
-        if (mainSubtitle2Match) {
-            htmlContent += `<p class="subtitle">ตามราวผ้า / เปิดขายตลอดเวลา</p>`;
-        }
-        htmlContent += '</header>';
+                if (listItems.length >= 4) {
+                    newContent = `${listItems[0]} / ${listItems[1]} / ${listItems[2]} ${listItems[3]}`;
+                } else if (listItems.length > 0) {
+                    newContent = listItems.join(' / '); // กรณีมีน้อยกว่า 4 รายการ
+                }
 
-        // --- ส่วน "ในไพรสน วนหากิน 08" (จากภาพแรก) ---
-        const section1Match = text.match(section1TitleRegex);
-        if (section1Match) {
-            const num = section1Match[1];
-            const item1 = section1Match[2].trim();
-            const item2 = section1Match[3].trim();
-            const item3 = section1Match[4].trim();
-            const item4 = section1Match[5].trim();
+            } else if ((match = titleLine.match(pattern2))) {
+                const prefix = match[1]; // "ไม่สนคนมอง พวกพ้องมากมี"
+                const number = match[2]; // "19"
+                newTitle = `${prefix} ย.${number}`;
 
-            htmlContent += `
-                <section class="content-section">
-                    <h2 class="section-title">ในไพรสน วนหากิน <span class="number">${num}</span></h2>
-                    <ul>
-                        <li>${item1}</li>
-                        <li>${item2}</li>
-                        <li>${item3}</li>
-                        <li>${item4}</li>
-                    </ul>
-                </section>
-            `;
-        } else {
-            // ถ้าไม่พบรูปแบบนี้ อาจจะใส่ Placeholder หรือแจ้งเตือน
-            htmlContent += `
-                <section class="content-section">
-                    <h2 class="section-title">ในไพรสน วนหากิน <span class="number">??</span></h2>
-                    <p>ไม่พบข้อมูลสำหรับส่วนนี้ในข้อความที่ป้อน</p>
-                </section>
-            `;
-        }
+                // จัดการลิสต์รายการ: ทุกคนเรียกว่าพ่อ / 14 อีกครั้ง / เบี้ยแหม็ดต้องเติม / กินได้ไม่เบื่อ
+                // ลบ * ออกจากทุกรายการ
+                listItems = listItems.map(item => item.replace(/^\*\s*/, ''));
+                newContent = listItems.join(' / '); // รวมทุกรายการด้วย /
 
-        htmlContent += '<hr class="divider">';
-
-        // --- ส่วน "เที่ยวทนในไพร มาไปในน้ำ ย.29" (จากภาพที่สอง) ---
-        const section2Match = text.match(section2TitleRegex);
-        if (section2Match) {
-            const chapterNum = section2Match[1];
-            htmlContent += `
-                <section class="content-section">
-                    <h2 class="section-title-alt">เที่ยวทนในไพร มาไปในน้ำ <span class="chapter-info">ย.${chapterNum}</span></h2>
-            `;
-            const section2Subtitle1Match = text.match(section2Subtitle1Regex);
-            if (section2Subtitle1Match) {
-                htmlContent += `<p class="subtitle">ลพบุรีมีลุย / มีเขี้ยวขอไว้ล่อเหยื่อ / ชักยึด</p>`;
+            } else {
+                // หากไม่ตรงกับ pattern ที่คาดไว้ ให้ใส่เป็นข้อความเดิม
+                newTitle = titleLine;
+                newContent = listItems.join('\n'); // เก็บลิสต์ไว้เหมือนเดิม
             }
-            const section2Subtitle2Match = text.match(section2Subtitle2Regex);
-            if (section2Subtitle2Match) {
-                htmlContent += `<p class="subtitle">ชักไย / นกแอ่นเล่นลม</p>`;
+
+            // เพิ่มส่วนหัวข้อ
+            resultText.push(`<span class="output-title">${newTitle}</span>`);
+
+            // เพิ่มเนื้อหา โดยจัดการเรื่องความยาว
+            const MAX_CHARS_PER_LINE = 80; // กำหนดความยาวสูงสุดต่อบรรทัด (ปรับได้ตามต้องการ)
+            let currentLine = '';
+            const words = newContent.split(' ');
+
+            for (let i = 0; i < words.length; i++) {
+                if ((currentLine + words[i]).length > MAX_CHARS_PER_LINE && currentLine.length > 0) {
+                    resultText.push(currentLine.trim());
+                    currentLine = words[i] + ' ';
+                } else {
+                    currentLine += words[i] + ' ';
+                }
             }
-            htmlContent += `</section>`;
-        } else {
-            htmlContent += `
-                <section class="content-section">
-                    <h2 class="section-title-alt">เที่ยวทนในไพร มาไปในน้ำ <span class="chapter-info">ย.ไม่พบ</span></h2>
-                    <p>ไม่พบข้อมูลสำหรับส่วน "เที่ยวทนในไพร" ในข้อความที่ป้อน</p>
-                </section>
-            `;
-        }
+            if (currentLine.trim().length > 0) {
+                resultText.push(currentLine.trim());
+            }
 
-        // --- ส่วน "ไม่สนคนมอง พวกพ้อง มากมี 19" (จากภาพแรก) ---
-        const section3Match = text.match(section3TitleRegex);
-        if (section3Match) {
-            const num = section3Match[1];
-            const item1 = section3Match[2].trim();
-            const item2 = section3Match[3].trim();
-            const item3 = section3Match[4].trim();
-            const item4 = section3Match[5].trim();
+            resultText.push(''); // เพิ่มบรรทัดว่างคั่นระหว่างบล็อก
+        });
 
-            htmlContent += `
-                <section class="content-section">
-                    <h2 class="section-title">ไม่สนคนมอง พวกพ้อง มากมี <span class="number">${num}</span></h2>
-                    <ul>
-                        <li>${item1}</li>
-                        <li>${item2}</li>
-                        <li>${item3}</li>
-                        <li>${item4}</li>
-                    </ul>
-                </section>
-            `;
-        } else {
-            htmlContent += `
-                <section class="content-section">
-                    <h2 class="section-title">ไม่สนคนมอง พวกพ้อง มากมี <span class="number">??</span></h2>
-                    <p>ไม่พบข้อมูลสำหรับส่วน "ไม่สนคนมอง" ในข้อความที่ป้อน</p>
-                </section>
-            `;
-        }
-
-        return htmlContent;
+        // เข้ารหัส HTML entities เพื่อป้องกัน XSS และแสดงผลข้อความดิบได้ถูกต้อง
+        // แต่เนื่องจากเราใส่ span ไปแล้ว อาจจะไม่จำเป็นต้องทำอีกรอบ
+        // return resultText.join('\n'); // คืนค่าเป็นสตริง โดยแต่ละองค์ประกอบจะขึ้นบรรทัดใหม่
+        return resultText.join('\n');
     }
+});
 });
