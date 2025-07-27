@@ -1,56 +1,68 @@
+แน่นอนครับ โดโด้!
+
+การสร้างเว็บบล็อกส่วนตัวนั้นมีหลายวิธี ขึ้นอยู่กับความซับซ้อนและฟีเจอร์ที่คุณต้องการ ผมจะให้โค้ด HTML, CSS, และ JavaScript พื้นฐานสำหรับการสร้างบล็อกส่วนตัวแบบง่ายๆ ที่คุณสามารถนำไปต่อยอดได้
+
+นี่คือโครงสร้างไฟล์ที่เราจะใช้:
+
+index.html (โครงสร้างหลักของบล็อก)
+
+style.css (การจัดรูปแบบและตกแต่ง)
+
+script.js (เพิ่มการทำงานแบบโต้ตอบ)
+
+1. index.html (โครงสร้างบล็อก)
+นี่คือโค้ด HTML พื้นฐานสำหรับหน้าบล็อกที่มีส่วนหัว, ส่วนบทความ (post) หลายๆ อัน, และส่วนท้าย
+
+HTML
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สร้างรูปภาพข้อความเอง (ใน GitHub Pages)</title>
+    <title>บล็อกส่วนตัวของโดโด้</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>สร้างรูปภาพข้อความของคุณเอง</h1>
-
-        <label for="authorName">ชื่อผู้เขียน (สำหรับ 'By ชื่อใครก็ได้' ในหัวข้อแรก):</label>
-        <input type="text" id="authorName" placeholder="เช่น โดโด้" value="โดโด้">
-        <br><br>
-
-        <textarea id="inputText" placeholder="ป้อนข้อความของคุณที่นี่ โดยมีรูปแบบดังนี้:
-
-หัวข้อแรก (มีเลขท้าย) 123
-*รายการที่ 1 ของบล็อกแรก
-*รายการที่ 2 ของบล็อกแรก
-*รายการที่ 3 ของบล็อกแรก
-*รายการที่ 4 ของบล็อกแรก
-------------
-หัวข้อที่สอง (มีเลขท้าย) 45
-*รายการที่ 1 ของบล็อกสอง
-*รายการที่ 2 ของบล็อกสอง
-*รายการที่ 3 ของบล็อกสอง
-------------
-หัวข้อที่สาม (มีเลขท้าย) 678
-*รายการเดียว
-">
-หัวข้อแรกของเรา 08
-*นี่คือรายการที่หนึ่ง
-*และนี่คือรายการที่สอง
-*ตามด้วยรายการที่สาม
-*ปิดท้ายรายการที่สี่
-------------
-หัวข้อเรื่องที่สอง 19
-*รายการบล็อกสองอันแรก
-*รายการบล็อกสองอันที่สอง
-*รายการบล็อกสองอันที่สาม
-*รายการบล็อกสองอันที่สี่
-*รายการบล็อกสองอันที่ห้า
-</textarea>
-        <button id="generateImageButton">สร้างรูปภาพและดาวน์โหลด</button>
-
-        <div id="imageOutput">
-            <canvas id="textCanvas"></canvas>
-            <a id="downloadLink" download="my_custom_text_image.png">ดาวน์โหลดรูปภาพ</a>
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="#" class="site-title">บล็อกส่วนตัวของโดโด้</a></h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">หน้าแรก</a></li>
+                    <li><a href="#">เกี่ยวกับฉัน</a></li>
+                    <li><a href="#">ติดต่อ</a></li>
+                </ul>
+            </nav>
         </div>
-    </div>
+    </header>
+
+    <main class="site-main">
+        <div class="container">
+            <section class="blog-posts">
+                <article class="post-card">
+                    <h2 class="post-title"><a href="#">โพสต์แรก: การเริ่มต้นเขียนบล็อก</a></h2>
+                    <p class="post-meta">วันที่ 27 กรกฎาคม 2568 โดย โดโด้</p>
+                    <p class="post-excerpt">สวัสดีครับทุกคน! โพสต์แรกนี้จะเป็นการแนะนำตัวและบอกเล่าถึงเหตุผลที่ผมตัดสินใจเริ่มต้นเขียนบล็อก ผมหวังว่าบล็อกนี้จะเป็นพื้นที่ที่ผมสามารถแบ่งปันเรื่องราวและความคิดเห็นของผมได้...</p>
+                    <a href="#" class="read-more">อ่านต่อ &raquo;</a>
+                </article>
+
+                <article class="post-card">
+                    <h2 class="post-title"><a href="#">โพสต์ที่สอง: เคล็ดลับการเรียนรู้โค้ดดิ้ง</a></h2>
+                    <p class="post-meta">วันที่ 20 กรกฎาคม 2568 โดย โดโด้</p>
+                    <p class="post-excerpt">ในโพสต์นี้ ผมจะมาแบ่งปันเคล็ดลับและประสบการณ์ส่วนตัวในการเรียนรู้การเขียนโปรแกรม หวังว่าจะเป็นประโยชน์สำหรับผู้เริ่มต้นทุกท่านนะครับ...</p>
+                    <a href="#" class="read-more">อ่านต่อ &raquo;</a>
+                </article>
+
+                </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 บล็อกส่วนตัวของโดโด้. สงวนลิขสิทธิ์.</p>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
