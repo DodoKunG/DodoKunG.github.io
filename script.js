@@ -1,19 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const inputText = document.getElementById('inputText'); // บรรทัดนี้ (หรือใกล้เคียง) อาจเป็นปัญหา
+    const inputText = document.getElementById('inputText');
     const authorNameInput = document.getElementById('authorName');
     const generateImageButton = document.getElementById('generateImageButton');
     const textCanvas = document.getElementById('textCanvas');
-    const ctx = textCanvas.getContext('2d'); // หรือบรรทัดนี้ที่เกี่ยวข้องกับ Canvas
+    const ctx = textCanvas.getContext('2d');
     const downloadLink = document.getElementById('downloadLink');
 
-    // กำหนดขนาดเริ่มต้นของ Canvas (จะถูกปรับอัตโนมัติภายหลัง)
     const initialCanvasWidth = 800;
     const padding = 40;
-    const lineHeightFactor = 1.6; // ปัจจัยคูณกับขนาดฟอนต์เพื่อกำหนดความสูงบรรทัด
 
-    // โหลดฟอนต์ Sarabun (จาก Google Fonts)
-    // การโหลดฟอนต์ภายนอกอาจใช้เวลา ทำให้ต้องรอฟอนต์โหลดเสร็จก่อนวาด
-    const fontReadyPromise = document.fonts.load('16px Sarabun'); // โหลดขนาด 16px ใดๆ เพื่อให้แน่ใจว่าฟอนต์พร้อม
+    // โหลดฟอนต์ Sarabun
+    const fontReadyPromise = document.fonts.load('16px Sarabun');
 
     generateImageButton.addEventListener('click', async () => {
         const rawText = inputText.value.trim();
@@ -24,24 +21,23 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // รอให้ฟอนต์โหลดเสร็จก่อนเริ่มวาด
         await fontReadyPromise;
 
-        // ประมวลผลข้อความตาม Logic ที่ตกลงกัน
-        const processedLines = processTextToLinesForCanvas(rawText, author, ctx, initialCanvasWidth - 2 * padding);
+        // ประมวลผลข้อความตาม Logic ใหม่
+        const processedLines = processCustomTextToLinesForCanvas(rawText, author, ctx, initialCanvasWidth - 2 * padding);
 
         // คำนวณความสูงของ Canvas
         let totalHeight = padding;
         processedLines.forEach(lineInfo => {
             const [text, isTitle] = lineInfo;
             if (text === "") { // บรรทัดว่าง
-                totalHeight += (isTitle ? 0 : 20); // ระยะห่างน้อยลงสำหรับบรรทัดว่าง
+                totalHeight += 20; // ระยะห่างสำหรับบรรทัดว่าง
             } else if (isTitle) {
-                ctx.font = '700 24px Sarabun, sans-serif'; // ใช้ฟอนต์สำหรับหัวข้อ
-                totalHeight += ctx.measureText(text).actualBoundingBoxAscent + ctx.measureText(text).actualBoundingBoxDescent + 20; // + ระยะห่าง
+                ctx.font = '700 24px Sarabun, sans-serif'; // ฟอนต์สำหรับหัวข้อ
+                totalHeight += ctx.measureText(text).actualBoundingBoxAscent + ctx.measureText(text).actualBoundingBoxDescent + 20;
             } else {
-                ctx.font = '400 20px Sarabun, sans-serif'; // ใช้ฟอนต์สำหรับเนื้อหา
-                totalHeight += ctx.measureText(text).actualBoundingBoxAscent + ctx.measureText(text).actualBoundingBoxDescent + 10; // + ระยะห่าง
+                ctx.font = '400 20px Sarabun, sans-serif'; // ฟอนต์สำหรับเนื้อหา
+                totalHeight += ctx.measureText(text).actualBoundingBoxAscent + ctx.measureText(text).actualBoundingBoxDescent + 10;
             }
         });
         totalHeight += padding; // Padding ด้านล่าง
@@ -50,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         textCanvas.height = totalHeight;
 
         // วาดรูปภาพบน Canvas
-        drawTextOnCanvas(ctx, processedLines, author, initialCanvasWidth, totalHeight, padding);
+        drawTextOnCanvas(ctx, processedLines, initialCanvasWidth, totalHeight, padding);
 
         // สร้างลิงก์ดาวน์โหลด
         const imageDataURL = textCanvas.toDataURL('image/png');
@@ -59,58 +55,66 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
-     * ประมวลผลข้อความจากรูปแบบลิสต์ (* รายการ) เป็นรูปแบบหัวข้อ / เนื้อหาสำหรับ Canvas
+     * ประมวลผลข้อความที่ผู้ใช้ป้อนเอง
      * @param {string} text - ข้อความต้นฉบับ
      * @param {string} author - ชื่อผู้เขียนสำหรับ By
      * @param {CanvasRenderingContext2D} ctx - Context ของ Canvas สำหรับวัดข้อความ
      * @param {number} maxWidth - ความกว้างสูงสุดของข้อความต่อบรรทัด
      * @returns {Array<[string, boolean]>} Array ของบรรทัดข้อความและสถานะว่าเป็นหัวข้อหรือไม่
      */
-    function processTextToLinesForCanvas(text, author, ctx, maxWidth) {
+    function processCustomTextToLinesForCanvas(text, author, ctx, maxWidth) {
         let resultLines = [];
+        // แยกบล็อกด้วยเส้นคั่น '------------'
         const blocks = text.split(/\s*------------\s*/).map(block => block.trim()).filter(block => block.length > 0);
 
         blocks.forEach((block, index) => {
             const lines = block.split('\n').map(line => line.trim()).filter(line => line.length > 0);
             if (!lines.length) return;
 
-            const titleLine = lines[0];
-            const listItems = lines.slice(1);
+            const titleLine = lines[0]; // บรรทัดแรกของบล็อกคือหัวข้อ
+            const listItems = lines.slice(1); // ที่เหลือคือรายการลิสต์
 
-            let newTitle = '';
-            let newContent = '';
+            let finalTitle = '';
+            let finalContent = '';
             
-            const titlePattern = /^(.*?)\s*(\d+)$/;
+            // Regex เพื่อจับส่วนนำหน้าหัวข้อและตัวเลขท้ายหัวข้อ (ถ้ามี)
+            // ตัวอย่าง: "หัวข้อของฉัน 123" -> prefix="หัวข้อของฉัน", number="123"
+            const titlePattern = /^(.*?)(?:\s*(\d+))?$/; // ?: ทำให้ group ไม่ถูกจับเป็น index
             const titleMatch = titleLine.match(titlePattern);
 
+            let prefix = titleLine;
+            let number = '';
             if (titleMatch) {
-                const prefix = titleMatch[1].trim();
-                const number = titleMatch[2].trim();
-                const typePrefix = (index === 0) ? 'ซ.' : 'ย.';
-                
-                newTitle = `${prefix} ${typePrefix}${number}`;
-                if (index === 0) {
-                    newTitle += ` By ${author}`;
-                }
-            } else {
-                newTitle = titleLine;
+                prefix = titleMatch[1] ? titleMatch[1].trim() : titleLine;
+                number = titleMatch[2] ? titleMatch[2].trim() : '';
+            }
+
+            // กำหนด ซ. หรือ ย. ตามลำดับบล็อก
+            const typePrefix = (index === 0) ? 'ซ.' : 'ย.';
+            
+            finalTitle = prefix;
+            if (number) { // ถ้ามีตัวเลข
+                finalTitle += ` ${typePrefix}${number}`;
+            }
+            if (index === 0 && author) { // เฉพาะบล็อกแรกและมีชื่อผู้เขียน
+                finalTitle += ` By ${author}`;
             }
 
             // จัดการรายการลิสต์: ใส่ / หลังทุกรายการยกเว้นรายการสุดท้าย
             if (listItems.length > 0) {
-                const cleanedItems = listItems.map(item => item.replace(/^\*\s*/, '').trim());
-                newContent = cleanedItems.join(' / ');
+                const cleanedItems = listItems.map(item => item.replace(/^\*\s*/, '').trim()); // ลบ * และ trim
+                finalContent = cleanedItems.join(' / ');
             } else {
-                newContent = "ไม่พบรายการ";
+                finalContent = "ไม่พบรายการ"; // หรือปล่อยว่าง
             }
 
-            // เพิ่มหัวข้อ
-            resultLines.push([newTitle, true]); // [ข้อความ, isTitle]
+            // เพิ่มหัวข้อลงในผลลัพธ์
+            resultLines.push([finalTitle, true]); // [ข้อความ, isTitle]
 
             // จัดการการขึ้นบรรทัดใหม่สำหรับเนื้อหาด้วย Canvas context
             ctx.font = '400 20px Sarabun, sans-serif'; // ใช้ฟอนต์สำหรับเนื้อหาเพื่อวัด
             let currentLineBuffer = '';
-            const wordsInContent = newContent.split(' ');
+            const wordsInContent = finalContent.split(' ');
 
             for (let i = 0; i < wordsInContent.length; i++) {
                 const word = wordsInContent[i];
@@ -130,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // เพิ่มบรรทัดว่างคั่นระหว่างบล็อก ถ้าไม่ใช่บล็อกสุดท้าย
             if (index < blocks.length - 1) {
-                resultLines.push(["", false]); // บรรทัดว่าง
+                resultLines.push(["", false]);
             }
         });
         return resultLines;
@@ -138,12 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * วาดข้อความที่ประมวลผลแล้วลงบน Canvas
+     * (ฟังก์ชันนี้เหมือนเดิม)
      */
-    function drawTextOnCanvas(ctx, linesToDraw, author, canvasWidth, canvasHeight, padding) {
-        // Clear canvas
+    function drawTextOnCanvas(ctx, linesToDraw, canvasWidth, canvasHeight, padding) {
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-        // Background
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
@@ -151,19 +153,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         linesToDraw.forEach(lineInfo => {
             const [text, isTitle] = lineInfo;
-
-            ctx.fillStyle = 'black'; // สีข้อความ
+            ctx.fillStyle = 'black';
 
             if (isTitle) {
-                ctx.font = '700 24px Sarabun, sans-serif'; // ฟอนต์สำหรับหัวข้อ
+                ctx.font = '700 24px Sarabun, sans-serif';
                 ctx.fillText(text, padding, y_pos + ctx.measureText(text).actualBoundingBoxAscent);
-                y_pos += ctx.measureText(text).actualBoundingBoxAscent + ctx.measureText(text).actualBoundingBoxDescent + 20; // + ระยะห่าง
+                y_pos += ctx.measureText(text).actualBoundingBoxAscent + ctx.measureText(text).actualBoundingBoxDescent + 20;
             } else if (text === "") {
-                y_pos += 20; // ระยะห่างสำหรับบรรทัดว่าง
+                y_pos += 20;
             } else {
-                ctx.font = '400 20px Sarabun, sans-serif'; // ฟอนต์สำหรับเนื้อหา
+                ctx.font = '400 20px Sarabun, sans-serif';
                 ctx.fillText(text, padding, y_pos + ctx.measureText(text).actualBoundingBoxAscent);
-                y_pos += ctx.measureText(text).actualBoundingBoxAscent + ctx.measureText(text).actualBoundingBoxDescent + 10; // + ระยะห่าง
+                y_pos += ctx.measureText(text).actualBoundingBoxAscent + ctx.measureText(text).actualBoundingBoxDescent + 10;
             }
         });
     }
