@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const inputText = document.getElementById('inputText');
+    const inputText = document.getElementById('inputText'); // บรรทัดนี้ (หรือใกล้เคียง) อาจเป็นปัญหา
     const authorNameInput = document.getElementById('authorName');
     const generateImageButton = document.getElementById('generateImageButton');
     const textCanvas = document.getElementById('textCanvas');
-    const ctx = textCanvas.getContext('2d');
+    const ctx = textCanvas.getContext('2d'); // หรือบรรทัดนี้ที่เกี่ยวข้องกับ Canvas
     const downloadLink = document.getElementById('downloadLink');
 
     // กำหนดขนาดเริ่มต้นของ Canvas (จะถูกปรับอัตโนมัติภายหลัง)
