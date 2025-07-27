@@ -1,74 +1,86 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เพลงโปรดของโดโด้</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    <header class="site-header">
-        <div class="container">
-            <h1>เพลงโปรดของโดโด้</h1>
-            <p>รวมเพลงที่โดโด้ชอบฟัง</p>
+<main class="site-main">
+    <div class="container">
+        <section class="album-grid">
+            <div class="album-card">
+                <img src="[https://via.placeholder.com/150/333333/ffffff?Text=Album+1](https://via.placeholder.com/150/333333/ffffff?Text=Album+1)" alt="ปกอัลบั้ม 1">
+                <div class="album-info">
+                    <h3 class="album-title">The Dark Side of the Moon</h3>
+                    <p class="artist">Pink Floyd</p>
+                    <p class="year">1973</p>
+                    <button class="play-button" data-song="song1.mp3" data-title="The Dark Side of the Moon">
+                        <i class="fas fa-play"></i> เล่น
+                    </button>
+                </div>
+            </div>
+
+            <div class="album-card">
+                <img src="[https://via.placeholder.com/150/222222/eeeeee?Text=Album+2](https://via.placeholder.com/150/222222/eeeeee?Text=Album+2)" alt="ปกอัลบั้ม 2">
+                <div class="album-info">
+                    <h3 class="album-title">OK Computer</h3>
+                    <p class="artist">Radiohead</p>
+                    <p class="year">1997</p>
+                    <button class="play-button" data-song="song2.mp3" data-title="OK Computer">
+                        <i class="fas fa-play"></i> เล่น
+                    </button>
+                </div>
+            </div>
+
+            <div class="album-card">
+                <img src="[https://via.placeholder.com/150/444444/cccccc?Text=Album+3](https://via.placeholder.com/150/444444/cccccc?Text=Album+3)" alt="ปกอัลบั้ม 3">
+                <div class="album-info">
+                    <h3 class="album-title">Nevermind</h3>
+                    <p class="artist">Nirvana</p>
+                    <p class="year">1991</p>
+                    <button class="play-button" data-song="song3.mp3" data-title="Nevermind">
+                        <i class="fas fa-play"></i> เล่น
+                    </button>
+                </div>
+            </div>
+
+            <div class="album-card">
+                <img src="[https://via.placeholder.com/150/111111/aaaaaa?Text=Album+4](https://via.placeholder.com/150/111111/aaaaaa?Text=Album+4)" alt="ปกอัลบั้ม 4">
+                <div class="album-info">
+                    <h3 class="album-title">Led Zeppelin IV</h3>
+                    <p class="artist">Led Zeppelin</p>
+                    <p class="year">1971</p>
+                    <button class="play-button" data-song="song4.mp3" data-title="Led Zeppelin IV">
+                        <i class="fas fa-play"></i> เล่น
+                    </button>
+                </div>
+            </div>
+
+            </section>
+
+        <div class="player">
+            <div class="now-playing">
+                <span class="song-name">ไม่ได้เลือกเพลง</span>
+                <span class="artist-name"></span>
+            </div>
+            <div class="controls">
+                <button class="prev-button" disabled><i class="fas fa-backward"></i></button>
+                <button class="main-play-button">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="next-button" disabled><i class="fas fa-forward"></i></button>
+            </div>
+            <div class="progress-bar">
+                <input type="range" id="seek-slider" max="100" value="0">
+                <div class="current-time">0:00</div>
+                <div class="duration">0:00</div>
+            </div>
+            <div class="volume-control">
+                <i class="fas fa-volume-up"></i>
+                <input type="range" id="volume-slider" max="100" value="100">
+            </div>
+            <audio id="audio-player"></audio>
         </div>
-    </header>
+    </div>
+</main>
 
-    <main class="site-main">
-        <div class="container">
-            <section class="music-list">
-                <h2>รายการเพลง</h2>
-                <div class="song-card" data-song-id="1">
-                    <div class="song-info">
-                        <span class="song-title">เพลงที่ 1: Fly Me To The Moon</span>
-                        <span class="song-artist">ศิลปิน: Frank Sinatra</span>
-                    </div>
-                    <button class="play-button" data-status="paused">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2025 เพลงโปรดของโดโด้</p>
+    </div>
+</footer>
 
-                <div class="song-card" data-song-id="2">
-                    <div class="song-info">
-                        <span class="song-title">เพลงที่ 2: Bohemian Rhapsody</span>
-                        <span class="song-artist">ศิลปิน: Queen</span>
-                    </div>
-                    <button class="play-button" data-status="paused">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-
-                <div class="song-card" data-song-id="3">
-                    <div class="song-info">
-                        <span class="song-title">เพลงที่ 3: Imagine</span>
-                        <span class="song-artist">ศิลปิน: John Lennon</span>
-                    </div>
-                    <button class="play-button" data-status="paused">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-
-                <div class="song-card" data-song-id="4">
-                    <div class="song-info">
-                        <span class="song-title">เพลงที่ 4: Canon in D</span>
-                        <span class="song-artist">ศิลปิน: Johann Pachelbel</span>
-                    </div>
-                    <button class="play-button" data-status="paused">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-
-                </section>
-        </div>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2025 เพลงโปรดของโดโด้ โดยโดโด้เอง</p>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+<script src="script-player.js"></script>
