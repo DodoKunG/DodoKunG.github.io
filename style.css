@@ -21,10 +21,9 @@ body {
 }
 
 .subhead {
-  text-align: right;
+  text-align: center;
   font-size: 14px;
   font-style: italic;
-  margin-top: -10px;
   margin-bottom: 10px;
 }
 
