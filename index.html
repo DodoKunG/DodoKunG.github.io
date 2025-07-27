@@ -9,33 +9,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>สร้างรูปภาพข้อความของคุณ</h1>
-
         <label for="authorName">ชื่อผู้เขียน (สำหรับ 'By ชื่อใครก็ได้'):</label>
         <input type="text" id="authorName" placeholder="เช่น โดโด้" value="โดโด้">
         <br><br>
-
-        <textarea id="inputText" placeholder="วางข้อความต้นฉบับที่นี่ (รูปแบบลิสต์รายการ)...">
-ในไพรสน วนหากิน 08
-*คนแก่พายเรือให้เสือนั่ง
-*วางไข่ในน้ำ
-*สู้รบปรบมือ
-*ยังคู่อยู่ติดกัน
-------------
-ไม่สนคนมอง พวกพ้องมากมี 19
-*ทุกคนเรียกว่าพ่อ
-*14 อีกครั้ง
-*เบี้ยแหม็ดต้องเติม
-*กินได้ไม่เบื่อ
-        </textarea>
+        <textarea id="inputText" placeholder="วางข้อความต้นฉบับที่นี่ (รูปแบบลิสต์รายการ)..."></textarea>
         <button id="generateImageButton">สร้างรูปภาพและดาวน์โหลด</button>
-
         <div id="imageOutput">
             <canvas id="textCanvas"></canvas>
             <a id="downloadLink" download="text_image.png">ดาวน์โหลดรูปภาพ</a>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
