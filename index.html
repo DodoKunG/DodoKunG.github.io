@@ -3,39 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>บล็อกส่วนตัวของโดโด้</title>
+    <title>เพลงโปรดของโดโด้</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header class="site-header">
         <div class="container">
-            <h1><a href="#" class="site-title">บล็อกส่วนตัวของโดโด้</a></h1>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#">หน้าแรก</a></li>
-                    <li><a href="#">เกี่ยวกับฉัน</a></li>
-                    <li><a href="#">ติดต่อ</a></li>
-                </ul>
-            </nav>
+            <h1>เพลงโปรดของโดโด้</h1>
+            <p>รวมเพลงที่โดโด้ชอบฟัง</p>
         </div>
     </header>
 
     <main class="site-main">
         <div class="container">
-            <section class="blog-posts">
-                <article class="post-card">
-                    <h2 class="post-title"><a href="#">โพสต์แรก: การเริ่มต้นเขียนบล็อก</a></h2>
-                    <p class="post-meta">วันที่ 27 กรกฎาคม 2568 โดย โดโด้</p>
-                    <p class="post-excerpt">สวัสดีครับทุกคน! โพสต์แรกนี้จะเป็นการแนะนำตัวและบอกเล่าถึงเหตุผลที่ผมตัดสินใจเริ่มต้นเขียนบล็อก ผมหวังว่าบล็อกนี้จะเป็นพื้นที่ที่ผมสามารถแบ่งปันเรื่องราวและความคิดเห็นของผมได้...</p>
-                    <a href="#" class="read-more">อ่านต่อ &raquo;</a>
-                </article>
+            <section class="music-list">
+                <h2>รายการเพลง</h2>
+                <div class="song-card" data-song-id="1">
+                    <div class="song-info">
+                        <span class="song-title">เพลงที่ 1: Fly Me To The Moon</span>
+                        <span class="song-artist">ศิลปิน: Frank Sinatra</span>
+                    </div>
+                    <button class="play-button" data-status="paused">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
 
-                <article class="post-card">
-                    <h2 class="post-title"><a href="#">โพสต์ที่สอง: เคล็ดลับการเรียนรู้โค้ดดิ้ง</a></h2>
-                    <p class="post-meta">วันที่ 20 กรกฎาคม 2568 โดย โดโด้</p>
-                    <p class="post-excerpt">ในโพสต์นี้ ผมจะมาแบ่งปันเคล็ดลับและประสบการณ์ส่วนตัวในการเรียนรู้การเขียนโปรแกรม หวังว่าจะเป็นประโยชน์สำหรับผู้เริ่มต้นทุกท่านนะครับ...</p>
-                    <a href="#" class="read-more">อ่านต่อ &raquo;</a>
-                </article>
+                <div class="song-card" data-song-id="2">
+                    <div class="song-info">
+                        <span class="song-title">เพลงที่ 2: Bohemian Rhapsody</span>
+                        <span class="song-artist">ศิลปิน: Queen</span>
+                    </div>
+                    <button class="play-button" data-status="paused">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+
+                <div class="song-card" data-song-id="3">
+                    <div class="song-info">
+                        <span class="song-title">เพลงที่ 3: Imagine</span>
+                        <span class="song-artist">ศิลปิน: John Lennon</span>
+                    </div>
+                    <button class="play-button" data-status="paused">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+
+                <div class="song-card" data-song-id="4">
+                    <div class="song-info">
+                        <span class="song-title">เพลงที่ 4: Canon in D</span>
+                        <span class="song-artist">ศิลปิน: Johann Pachelbel</span>
+                    </div>
+                    <button class="play-button" data-status="paused">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
 
                 </section>
         </div>
@@ -43,7 +65,7 @@
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2025 บล็อกส่วนตัวของโดโด้. สงวนลิขสิทธิ์.</p>
+            <p>&copy; 2025 เพลงโปรดของโดโด้ โดยโดโด้เอง</p>
         </div>
     </footer>
 
