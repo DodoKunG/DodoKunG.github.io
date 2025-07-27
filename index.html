@@ -1,27 +1,59 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>Template กลอน</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แปลงข้อความอัตโนมัติ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* เพิ่มสไตล์สำหรับ textarea และปุ่ม */
+        #inputText {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 1.1em;
+            box-sizing: border-box; /* รวม padding และ border ในความกว้าง/สูง */
+        }
+        #convertButton {
+            display: block;
+            width: 200px;
+            margin: 0 auto 30px auto;
+            padding: 12px 25px;
+            background-color: #28a745; /* สีเขียวสวยๆ */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #convertButton:hover {
+            background-color: #218838;
+        }
+        #outputArea {
+            margin-top: 30px;
+            border-top: 2px dashed #ddd;
+            padding-top: 30px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>แปลงข้อความจาก Template</h1>
 
-  <div class="template">
-    <div class="title" id="title">ชื่อกลอน</div>
-    <div class="subhead" id="author">by Meena</div>
-    <div class="content" id="content">
-      กรอกข้อความด้านล่าง แล้วกด "อัปเดต"
+        <textarea id="inputText" placeholder="วางข้อความจากภาพที่สองที่นี่..."></textarea>
+        <button id="convertButton">แปลงข้อความเป็นรูปแบบภาพแรก</button>
+
+        <div id="outputArea">
+            <p>ผลลัพธ์จะปรากฏที่นี่หลังจากกดปุ่ม "แปลงข้อความเป็นรูปแบบภาพแรก"</p>
+        </div>
     </div>
-  </div>
 
-  <div class="editor">
-    <input type="text" id="inputTitle" placeholder="ชื่อกลอน">
-    <input type="text" id="inputAuthor" placeholder="ชื่อผู้แต่ง (เช่น Meena)">
-    <textarea id="inputContent" placeholder="พิมพ์กลอนตรงนี้ แยกบรรทัดด้วย Enter"></textarea>
-    <button onclick="updateTemplate()">อัปเดต</button>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
