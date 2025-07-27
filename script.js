@@ -1,39 +1,99 @@
-// ตัวอย่าง JavaScript สำหรับอนาคต (ตอนนี้ยังไม่มีฟังก์ชันการทำงานที่ซับซ้อน)
 document.addEventListener('DOMContentLoaded', () => {
-    const playButtons = document.querySelectorAll('.play-button');
-    let currentPlayingButton = null; // เก็บปุ่มที่กำลังเล่นอยู่
+   const playButtons = document.querySelectorAll('.album-card .play-button');
+   const audioPlayer = document.getElementById('audio-player');
+   const playPauseButton = document.querySelector('.main-play-button');
+   const playPauseIcon = playPauseButton.querySelector('i');
+   const seekSlider = document.getElementById('seek-slider');
+   const volumeSlider = document.getElementById('volume-slider');
+   const currentTimeDisplay = document.querySelector('.current-time');
+   const durationDisplay = document.querySelector('.duration');
+   const nowPlayingTitle = document.querySelector('.now-playing .song-name');
+   const nowPlayingArtist = document.querySelector('.now-playing .artist-name');
 
-    playButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const icon = button.querySelector('i');
+   let currentSong = null;
+   let isPlaying = false;
 
-            // ถ้ามีปุ่มอื่นกำลังเล่นอยู่ ให้หยุดปุ่มนั้นก่อน
-            if (currentPlayingButton && currentPlayingButton !== button) {
-                const currentIcon = currentPlayingButton.querySelector('i');
-                currentIcon.classList.remove('fa-pause');
-                currentIcon.classList.add('fa-play');
-                currentPlayingButton.classList.remove('playing');
-                currentPlayingButton.dataset.status = 'paused';
-            }
+   playButtons.forEach(button => {
+       button.addEventListener('click', () => {
+           const songFile = button.dataset.song;
+           const songTitle = button.dataset.title;
+           const artist = button.closest('.album-card').querySelector('.artist').textContent;
 
-            // สลับสถานะของปุ่มที่คลิก
-            if (button.dataset.status === 'paused') {
-                // เปลี่ยนเป็นเล่น
-                icon.classList.remove('fa-play');
-                icon.classList.add('fa-pause');
-                button.classList.add('playing');
-                button.dataset.status = 'playing';
-                currentPlayingButton = button; // กำหนดให้เป็นปุ่มที่กำลังเล่นอยู่
-                console.log(`กำลังเล่น: ${button.closest('.song-card').querySelector('.song-title').textContent}`);
-            } else {
-                // เปลี่ยนเป็นหยุดชั่วคราว
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-play');
-                button.classList.remove('playing');
-                button.dataset.status = 'paused';
-                currentPlayingButton = null; // ไม่มีปุ่มใดกำลังเล่นอยู่
-                console.log(`หยุดเพลง: ${button.closest('.song-card').querySelector('.song-title').textContent}`);
-            }
-        });
-    });
+           if (currentSong !== songFile) {
+               audioPlayer.src = songFile;
+               currentSong = songFile;
+               nowPlayingTitle.textContent = songTitle;
+               nowPlayingArtist.textContent = artist;
+               isPlaying = true;
+               playPauseIcon.classList.remove('fa-play');
+               playPauseIcon.classList.add('fa-pause');
+               audioPlayer.play();
+           } else {
+               if (isPlaying) {
+                   audioPlayer.pause();
+                   isPlaying = false;
+                   playPauseIcon.classList.remove('fa-pause');
+                   playPauseIcon.classList.add('fa-play');
+               } else {
+                   audioPlayer.play();
+                   isPlaying = true;
+                   playPauseIcon.classList.remove('fa-play');
+                   playPauseIcon.classList.add('fa-pause');
+               }
+           }
+       });
+   });
+
+   playPauseButton.addEventListener('click', () => {
+       if (currentSong) {
+           if (isPlaying) {
+               audioPlayer.pause();
+               isPlaying = false;
+               playPauseIcon.classList.remove('fa-pause');
+               playPauseIcon.classList.add('fa-play');
+           } else {
+               audioPlayer.play();
+               isPlaying = true;
+               playPauseIcon.classList.remove('fa-play');
+               playPauseIcon.classList.add('fa-pause');
+           }
+       } else {
+           alert('กรุณาเลือกเพลงก่อนครับ');
+       }
+   });
+
+   audioPlayer.addEventListener('loadedmetadata', () => {
+       const duration = formatTime(audioPlayer.duration);
+       durationDisplay.textContent = duration;
+       seekSlider.max = Math.floor(audioPlayer.duration);
+   });
+
+   audioPlayer.addEventListener('timeupdate', () => {
+       const currentTime = formatTime(audioPlayer.currentTime);
+       currentTimeDisplay.textContent = currentTime;
+       seekSlider.value = Math.floor(audioPlayer.currentTime);
+   });
+
+   seekSlider.addEventListener('input', () => {
+       audioPlayer.currentTime = seekSlider.value;
+   });
+
+   volumeSlider.addEventListener('input', () => {
+       audioPlayer.volume = volumeSlider.value / 100;
+   });
+
+   function formatTime(seconds) {
+       const minutes = Math.floor(seconds / 60);
+       const remainingSeconds = Math.floor(seconds % 60).toString().padStart(2, '0');
+       return `${minutes}:${remainingSeconds}`;
+   }
+
+   audioPlayer.addEventListener('ended', () => {
+       isPlaying = false;
+       playPauseIcon.classList.remove('fa-pause');
+       playPauseIcon.classList.add('fa-play');
+       audioPlayer.currentTime = 0;
+       currentTimeDisplay.textContent = '0:00';
+       seekSlider.value = 0;
+   });
 });
