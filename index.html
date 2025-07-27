@@ -3,22 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สร้างรูปภาพข้อความ (ใน GitHub Pages)</title>
+    <title>สร้างรูปภาพข้อความเอง (ใน GitHub Pages)</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <label for="authorName">ชื่อผู้เขียน (สำหรับ 'By ชื่อใครก็ได้'):</label>
+        <h1>สร้างรูปภาพข้อความของคุณเอง</h1>
+
+        <label for="authorName">ชื่อผู้เขียน (สำหรับ 'By ชื่อใครก็ได้' ในหัวข้อแรก):</label>
         <input type="text" id="authorName" placeholder="เช่น โดโด้" value="โดโด้">
         <br><br>
-        <textarea id="inputText" placeholder="วางข้อความต้นฉบับที่นี่ (รูปแบบลิสต์รายการ)..."></textarea>
+
+        <textarea id="inputText" placeholder="ป้อนข้อความของคุณที่นี่ โดยมีรูปแบบดังนี้:
+
+หัวข้อแรก (มีเลขท้าย) 123
+*รายการที่ 1 ของบล็อกแรก
+*รายการที่ 2 ของบล็อกแรก
+*รายการที่ 3 ของบล็อกแรก
+*รายการที่ 4 ของบล็อกแรก
+------------
+หัวข้อที่สอง (มีเลขท้าย) 45
+*รายการที่ 1 ของบล็อกสอง
+*รายการที่ 2 ของบล็อกสอง
+*รายการที่ 3 ของบล็อกสอง
+------------
+หัวข้อที่สาม (มีเลขท้าย) 678
+*รายการเดียว
+">
+หัวข้อแรกของเรา 08
+*นี่คือรายการที่หนึ่ง
+*และนี่คือรายการที่สอง
+*ตามด้วยรายการที่สาม
+*ปิดท้ายรายการที่สี่
+------------
+หัวข้อเรื่องที่สอง 19
+*รายการบล็อกสองอันแรก
+*รายการบล็อกสองอันที่สอง
+*รายการบล็อกสองอันที่สาม
+*รายการบล็อกสองอันที่สี่
+*รายการบล็อกสองอันที่ห้า
+</textarea>
         <button id="generateImageButton">สร้างรูปภาพและดาวน์โหลด</button>
+
         <div id="imageOutput">
             <canvas id="textCanvas"></canvas>
-            <a id="downloadLink" download="text_image.png">ดาวน์โหลดรูปภาพ</a>
+            <a id="downloadLink" download="my_custom_text_image.png">ดาวน์โหลดรูปภาพ</a>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
