@@ -4,6 +4,6 @@ function updateTemplate() {
   const content = document.getElementById("inputContent").value;
 
   document.getElementById("title").innerText = title;
-  document.getElementById("author").innerText = author;
+  document.getElementById("author").innerText = "by " + author;
   document.getElementById("content").innerText = content;
 }
