@@ -1,138 +1,272 @@
-/* ตั้งค่าพื้นฐาน */
+**2. `style-dark.css` (การตกแต่งสไตล์ดำ โมเดิร์น)**
+
+```css
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-    color: #333;
-    background-color: #e0f2f7; /* สีฟ้าอ่อนสบายตา */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  color: #eee; /* สีข้อความสว่าง */
+  background-color: #121212; /* สีดำเข้ม */
 }
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 20px;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+a {
+  color: #bb86fc; /* สีม่วงอ่อน */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #e0bfff;
 }
 
 /* ส่วนหัว */
 .site-header {
-    background-color: #2196f3; /* สีฟ้าสดใส */
-    color: #fff;
-    padding: 2rem 0;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  background-color: #212121;
+  color: #fff;
+  padding: 2rem 0;
+  text-align: center;
+  border-bottom: 1px solid #333;
+  margin-bottom: 30px;
 }
 
 .site-header h1 {
-    margin: 0;
-    font-size: 2.5em;
+  margin: 0;
+  font-size: 2.5em;
+  color: #bb86fc;
 }
 
-.site-header p {
-    margin-top: 5px;
-    font-size: 1.1em;
-    opacity: 0.9;
+.site-header .subtitle {
+  margin-top: 5px;
+  font-size: 1.1em;
+  color: #9e9e9e;
 }
 
 /* เนื้อหาหลัก */
 .site-main {
-    padding: 2.5rem 0;
+  padding-bottom: 60px; /* เผื่อพื้นที่สำหรับ player */
 }
 
-.music-list {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
 }
 
-.music-list h2 {
-    text-align: center;
-    color: #2196f3;
-    margin-bottom: 30px;
-    font-size: 2em;
+.album-card {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.song-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    margin-bottom: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+.album-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
 }
 
-.song-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.album-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1/1; /* รักษาอัตราส่วนภาพ */
+  object-fit: cover;
 }
 
-.song-info {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+.album-info {
+  padding: 15px;
+  text-align: center;
 }
 
-.song-title {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
+.album-title {
+  margin-top: 0;
+  font-size: 1.2em;
+  color: #eee;
+  white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ */
+  overflow: hidden;
+  text-overflow: ellipsis; /* แสดง ... ถ้ายาวเกินไป */
 }
 
-.song-artist {
-    font-size: 0.9em;
-    color: #666;
-    margin-top: 3px;
+.artist {
+  font-size: 0.9em;
+  color: #9e9e9e;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.year {
+  font-size: 0.8em;
+  color: #616161;
+  margin-bottom: 10px;
 }
 
 .play-button {
-    background-color: #4CAF50; /* สีเขียว */
-    color: white;
-    border: none;
-    border-radius: 50%; /* ทำให้เป็นวงกลม */
-    width: 45px;
-    height: 45px;
-    font-size: 1.2em;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  background-color: #bb86fc;
+  color: #212121;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
 }
 
 .play-button:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
+  background-color: #e0bfff;
+  color: #121212;
 }
 
-.play-button:active {
-    transform: scale(0.98);
+/* ส่วน Player ด้านล่าง */
+.player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #212121;
+  color: #eee;
+  padding: 15px 20px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
 }
 
-/* สถานะเล่นอยู่ */
-.play-button.playing {
-    background-color: #f44336; /* สีแดงเมื่อเล่นอยู่ */
+.now-playing {
+  flex-grow: 1;
 }
 
-.play-button.playing:hover {
-    background-color: #da190b;
+.song-name {
+  font-weight: bold;
+  margin-right: 10px;
 }
 
+.artist-name {
+  color: #9e9e9e;
+}
+
+.controls button {
+  background: none;
+  color: #eee;
+  border: none;
+  font-size: 1.2em;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.controls button:hover {
+  color: #bb86fc;
+}
+
+.controls .main-play-button {
+  font-size: 1.8em;
+}
+
+.progress-bar {
+  flex-grow: 1;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+}
+
+#seek-slider {
+  flex-grow: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #333;
+  height: 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+#seek-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #bb86fc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#seek-slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background: #bb86fc;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.current-time, .duration {
+  font-size: 0.8em;
+  color: #9e9e9e;
+  margin: 0 5px;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.volume-control i {
+  margin-right: 5px;
+  font-size: 1em;
+  color: #eee;
+}
+
+#volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #333;
+  height: 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  width: 80px;
+}
+
+#volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #bb86fc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#volume-slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background: #bb86fc;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
 
 /* ส่วนท้าย */
 .site-footer {
-    background-color: #333;
-    color: #eee;
-    text-align: center;
-    padding: 1.5rem 0;
-    margin-top: 40px;
-    font-size: 0.9em;
+  background-color: #212121;
+  color: #9e9e9e;
+  text-align: center;
+  padding: 1.5rem 0;
+  margin-top: 40px;
+  font-size: 0.9em;
+  border-top: 1px solid #333;
 }
 
 .site-footer p {
-    margin: 0;
+  margin: 0;
 }
