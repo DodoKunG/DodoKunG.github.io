@@ -163,40 +163,6 @@
             border: 2px solid #ff6b6b;
         }
 
-        .btn-clear:hover {
-            background: #ff6b6b;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .output-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        /* The Card Style (Target for Image Generation) */
-        .card {
-            background: white;
-            border: 1px solid #000;
-            padding: 40px 50px;
-            width: 100%;
-            max-width: 650px;
-            box-sizing: border-box;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 35px;
-            box-shadow: var(--shadow-md);
-            /* Shadow for preview only, html2canvas might capture it but usually fine or can be removed before capture if needed */
-        }
-
-        .text-block {
-            width: 100%;
-        }
 
         .card-header {
             margin-bottom: 12px;
@@ -323,7 +289,7 @@
             if (!input.trim()) return;
 
             // New Parsing Logic: 
-            // 1. Ignore lines with only underscores
+            // 1. Ignore lines with only underscores or dashes
             // 2. Handle standalone numbers
             // 3. Header vs Items
             const lines = input.split('\n');
@@ -334,8 +300,8 @@
                 const trimmed = line.trim();
                 if (!trimmed) return;
 
-                // Ignore lines that are just underscores
-                if (/^_+$/.test(trimmed)) return;
+                // Ignore lines that are just underscores or dashes
+                if (/^[-_]+$/.test(trimmed)) return;
 
                 if (trimmed.startsWith('*')) {
                     // It's an item
