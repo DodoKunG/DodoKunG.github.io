@@ -30,6 +30,7 @@
         body {
             font-family: 'Sarabun', sans-serif;
             background: var(--primary-gradient);
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -178,19 +179,15 @@
             border-top: 1px solid #eee;
             width: 100%;
             overflow-x: auto;
-            /* Allow horizontal scroll on mobile */
             padding-bottom: 20px;
         }
 
-        /* The Card Style (Target for Image Generation) */
         .card {
             background: white;
             border: 1px solid #000;
             padding: 40px 50px;
             min-width: 700px;
-            /* Fixed width to ensure landscape image on mobile */
             width: fit-content;
-            /* Adjust to content or min-width */
             box-sizing: border-box;
             text-align: center;
             display: flex;
@@ -198,8 +195,6 @@
             gap: 35px;
             box-shadow: var(--shadow-md);
             margin: 0 auto;
-            /* Center if container is wider */
-            /* Shadow for preview only, html2canvas might capture it but usually fine or can be removed before capture if needed */
         }
 
         .text-block {
@@ -260,7 +255,6 @@
             box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
@@ -324,16 +318,12 @@
     <script>
         function generateCards() {
             const input = document.getElementById('inputText').value;
-            const author = document.getElementById('authorName').value.trim();
+            const author = document.getElementById('authorName').value.trim() || "Meena";
             const container = document.getElementById('outputContainer');
             container.innerHTML = '';
 
             if (!input.trim()) return;
 
-            // New Parsing Logic: 
-            // 1. Ignore lines with only underscores or dashes
-            // 2. Handle standalone numbers
-            // 3. Header vs Items
             const lines = input.split('\n');
             const blocks = [];
             let currentBlock = null;
@@ -342,35 +332,26 @@
                 const trimmed = line.trim();
                 if (!trimmed) return;
 
-                // Ignore lines that are just underscores or dashes
                 if (/^[-_]+$/.test(trimmed)) return;
 
                 if (trimmed.startsWith('*')) {
-                    // It's an item
                     if (currentBlock) {
                         currentBlock.items.push(trimmed.substring(1).trim());
                     }
                 } else if (/^\d+$/.test(trimmed)) {
-                    // It's a standalone number
-                    // Assign to current block if exists
                     if (currentBlock) {
                         currentBlock.numberPart = trimmed;
                     }
                 } else {
-                    // It's a header text
-                    // If we have a previous block, save it
                     if (currentBlock) {
                         blocks.push(currentBlock);
                     }
 
-                    // Check if this header line also has a number at the end
                     let headerText = trimmed;
                     let numberPart = '';
 
-                    // Regex to find trailing number: "Text 123"
                     const match = trimmed.match(/^(.*?)(\s+(\d+))?$/);
                     if (match) {
-                        // match[1] is text, match[3] is number if exists
                         headerText = match[1];
                         if (match[3]) {
                             numberPart = match[3];
@@ -384,12 +365,11 @@
                     };
                 }
             });
-            // Push the last block
+
             if (currentBlock) {
                 blocks.push(currentBlock);
             }
 
-            // Create ONE main card for all blocks
             const mainCard = document.createElement('div');
             mainCard.className = 'card';
             mainCard.id = 'main-card';
@@ -399,44 +379,37 @@
             blocks.forEach((blockData, index) => {
                 hasContent = true;
                 const headerText = blockData.headerText;
-                const numberPart = blockData.numberPart || ''; // Use parsed number
+                const numberPart = blockData.numberPart || '';
                 const items = blockData.items;
 
-                // Parse Suffix (Prefix + Number + Author)
                 let headerSuffix = '';
 
                 if (numberPart) {
                     if (index === 0) {
                         headerSuffix = `ช.${numberPart}`;
-                        if (author) {
-                            headerSuffix += ` <span class="header-author">by ${author}</span>`;
-                        }
+                        headerSuffix += ` <span class="header-author">by ${author}</span>`;
                     } else if (index === 1) {
                         headerSuffix = `ย.${numberPart}`;
                     } else {
                         headerSuffix = numberPart;
                     }
                 } else {
-                    // Fallback if no number found
                     if (index === 0) {
                         headerSuffix = `ช.`;
-                        if (author) headerSuffix += ` <span class="header-author">by ${author}</span>`;
+                        headerSuffix += ` <span class="header-author">by ${author}</span>`;
                     } else if (index === 1) {
                         headerSuffix = `ย.`;
                     }
                 }
 
-                // Create Block Container
                 const blockDiv = document.createElement('div');
                 blockDiv.className = 'text-block';
 
-                // Header HTML
                 const headerDiv = document.createElement('div');
                 headerDiv.className = 'card-header';
                 headerDiv.innerHTML = `<span class="header-text">${headerText}</span><span class="header-suffix">${headerSuffix}</span>`;
                 blockDiv.appendChild(headerDiv);
 
-                // Content HTML
                 const contentDiv = document.createElement('div');
                 contentDiv.className = 'card-content';
                 const contentText = items.join(' / ');
@@ -449,7 +422,6 @@
             if (hasContent) {
                 container.appendChild(mainCard);
 
-                // Add Download Button
                 const downloadBtn = document.createElement('button');
                 downloadBtn.className = 'download-btn';
                 downloadBtn.innerHTML = '<span>💾</span> บันทึกเป็นรูปภาพ';
@@ -461,7 +433,6 @@
 
                 container.appendChild(btnContainer);
 
-                // Scroll to result
                 mainCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         }
@@ -469,16 +440,14 @@
         function downloadCard(elementId, fileName) {
             const element = document.getElementById(elementId);
 
-            // Temporarily remove shadow for cleaner image
             const originalBoxShadow = element.style.boxShadow;
             element.style.boxShadow = 'none';
 
             html2canvas(element, {
-                scale: 3, // High resolution
+                scale: 3,
                 backgroundColor: null,
-                windowWidth: 1200 // Force desktop width for capture
+                windowWidth: 1200
             }).then(canvas => {
-                // Restore shadow
                 element.style.boxShadow = originalBoxShadow;
 
                 const link = document.createElement('a');
