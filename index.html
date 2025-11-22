@@ -163,6 +163,48 @@
             border: 2px solid #ff6b6b;
         }
 
+        .btn-clear:hover {
+            background: #ff6b6b;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .output-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            width: 100%;
+            overflow-x: auto;
+            /* Allow horizontal scroll on mobile */
+            padding-bottom: 20px;
+        }
+
+        /* The Card Style (Target for Image Generation) */
+        .card {
+            background: white;
+            border: 1px solid #000;
+            padding: 40px 50px;
+            min-width: 700px;
+            /* Fixed width to ensure landscape image on mobile */
+            width: fit-content;
+            /* Adjust to content or min-width */
+            box-sizing: border-box;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            box-shadow: var(--shadow-md);
+            margin: 0 auto;
+            /* Center if container is wider */
+            /* Shadow for preview only, html2canvas might capture it but usually fine or can be removed before capture if needed */
+        }
+
+        .text-block {
+            width: 100%;
+        }
 
         .card-header {
             margin-bottom: 12px;
@@ -433,7 +475,8 @@
 
             html2canvas(element, {
                 scale: 3, // High resolution
-                backgroundColor: null
+                backgroundColor: null,
+                windowWidth: 1200 // Force desktop width for capture
             }).then(canvas => {
                 // Restore shadow
                 element.style.boxShadow = originalBoxShadow;
