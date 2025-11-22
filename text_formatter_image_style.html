@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>โปรแกรมจัดรูปแบบข้อความ (Premium Style)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a4a4a;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .input-section {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            font-size: 1rem;
+            margin-left: 5px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #eef0f5;
+            border-radius: var(--radius-md);
+            font-family: 'Sarabun', sans-serif;
+            font-size: 16px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #764ba2;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1);
+        }
+
+        textarea {
+            height: 200px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-generate {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+        }
+
+        .btn-clear {
+            background: #fff;
+            color: #ff6b6b;
+            border: 2px solid #ff6b6b;
+        }
+
+        .btn-clear:hover {
+            background: #ff6b6b;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .output-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        /* The Card Style (Target for Image Generation) */
+        .card {
+            background: white;
+            border: 1px solid #000;
+            padding: 40px 50px;
+            width: 100%;
+            max-width: 650px;
+            box-sizing: border-box;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            box-shadow: var(--shadow-md);
+            /* Shadow for preview only, html2canvas might capture it but usually fine or can be removed before capture if needed */
+        }
+
+        .text-block {
+            width: 100%;
+        }
+
+        .card-header {
+            margin-bottom: 12px;
+            font-size: 22px;
+            font-weight: bold;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            line-height: 1.4;
+        }
+
+        .header-text {
+            text-decoration: none;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .header-suffix {
+            font-size: 0.85em;
+            margin-left: 12px;
+            font-weight: normal;
+            color: #000;
+        }
+
+        .header-author {
+            font-size: 0.65em;
+            margin-left: 8px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .card-content {
+            font-size: 20px;
+            line-height: 1.7;
+            color: #000;
+        }
+
+        .download-btn {
+            background: var(--secondary-gradient);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>✨ จัดรูปแบบข้อความ</h1>
+        <p class="subtitle">สร้างรูปภาพข้อความสวยๆ ได้ง่ายๆ ในพริบตา</p>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="authorName">👤 ชื่อผู้แต่ง (By ...)</label>
+                <input type="text" id="authorName" placeholder="เช่น Meena">
+            </div>
+
+            <div class="input-group">
+                <label for="inputText">📝 ข้อความ</label>
+                <textarea id="inputText" placeholder="วางข้อความที่นี่...
+ตัวอย่าง:
+ตัวผอมพี มีคู่กิน 07
+*ลิงหลอกเจ้า
+*แลกวามาแล้ว
+*คนกินแล้วเมา
+*ลดแลกแจกแถม
+-----------
+ไพรสินณ์อาศัย มาไปในน้ำ 31
+*เหยี่ยวถลาลม
+*มีหูมีตาหางยาว
+*ชอบกินหญ้าอ่อน
+*อยู่ในโบสถ์"></textarea>
+            </div>
+
+            <div class="controls">
+                <button class="btn-generate" onclick="generateCards()">
+                    <span>🎨</span> สร้างรูปภาพ
+                </button>
+                <button class="btn-clear" onclick="clearAll()">
+                    <span>🗑️</span> ล้างข้อมูล
+                </button>
+            </div>
+        </div>
+
+        <div id="outputContainer" class="output-section">
+            <!-- Cards will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        function generateCards() {
+            const input = document.getElementById('inputText').value;
+            const author = document.getElementById('authorName').value.trim();
+            const container = document.getElementById('outputContainer');
+            container.innerHTML = '';
+
+            if (!input.trim()) return;
+
+            // New Parsing Logic: 
+            // 1. Ignore lines with only underscores
+            // 2. Handle standalone numbers
+            // 3. Header vs Items
+            const lines = input.split('\n');
+            const blocks = [];
+            let currentBlock = null;
+
+            lines.forEach(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return;
+
+                // Ignore lines that are just underscores
+                if (/^_+$/.test(trimmed)) return;
+
+                if (trimmed.startsWith('*')) {
+                    // It's an item
+                    if (currentBlock) {
+                        currentBlock.items.push(trimmed.substring(1).trim());
+                    }
+                } else if (/^\d+$/.test(trimmed)) {
+                    // It's a standalone number
+                    // Assign to current block if exists
+                    if (currentBlock) {
+                        currentBlock.numberPart = trimmed;
+                    }
+                } else {
+                    // It's a header text
+                    // If we have a previous block, save it
+                    if (currentBlock) {
+                        blocks.push(currentBlock);
+                    }
+
+                    // Check if this header line also has a number at the end
+                    let headerText = trimmed;
+                    let numberPart = '';
+
+                    // Regex to find trailing number: "Text 123"
+                    const match = trimmed.match(/^(.*?)(\s+(\d+))?$/);
+                    if (match) {
+                        // match[1] is text, match[3] is number if exists
+                        headerText = match[1];
+                        if (match[3]) {
+                            numberPart = match[3];
+                        }
+                    }
+
+                    currentBlock = {
+                        headerText: headerText,
+                        numberPart: numberPart,
+                        items: []
+                    };
+                }
+            });
+            // Push the last block
+            if (currentBlock) {
+                blocks.push(currentBlock);
+            }
+
+            // Create ONE main card for all blocks
+            const mainCard = document.createElement('div');
+            mainCard.className = 'card';
+            mainCard.id = 'main-card';
+
+            let hasContent = false;
+
+            blocks.forEach((blockData, index) => {
+                hasContent = true;
+                const headerText = blockData.headerText;
+                const numberPart = blockData.numberPart || ''; // Use parsed number
+                const items = blockData.items;
+
+                // Parse Suffix (Prefix + Number + Author)
+                let headerSuffix = '';
+
+                if (numberPart) {
+                    if (index === 0) {
+                        headerSuffix = `ช.${numberPart}`;
+                        if (author) {
+                            headerSuffix += ` <span class="header-author">by ${author}</span>`;
+                        }
+                    } else if (index === 1) {
+                        headerSuffix = `ย.${numberPart}`;
+                    } else {
+                        headerSuffix = numberPart;
+                    }
+                } else {
+                    // Fallback if no number found
+                    if (index === 0) {
+                        headerSuffix = `ช.`;
+                        if (author) headerSuffix += ` <span class="header-author">by ${author}</span>`;
+                    } else if (index === 1) {
+                        headerSuffix = `ย.`;
+                    }
+                }
+
+                // Create Block Container
+                const blockDiv = document.createElement('div');
+                blockDiv.className = 'text-block';
+
+                // Header HTML
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'card-header';
+                headerDiv.innerHTML = `<span class="header-text">${headerText}</span><span class="header-suffix">${headerSuffix}</span>`;
+                blockDiv.appendChild(headerDiv);
+
+                // Content HTML
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'card-content';
+                const contentText = items.join(' / ');
+                contentDiv.textContent = contentText;
+                blockDiv.appendChild(contentDiv);
+
+                mainCard.appendChild(blockDiv);
+            });
+
+            if (hasContent) {
+                container.appendChild(mainCard);
+
+                // Add Download Button
+                const downloadBtn = document.createElement('button');
+                downloadBtn.className = 'download-btn';
+                downloadBtn.innerHTML = '<span>💾</span> บันทึกเป็นรูปภาพ';
+                downloadBtn.onclick = () => downloadCard('main-card', 'formatted_text.png');
+
+                const btnContainer = document.createElement('div');
+                btnContainer.style.marginBottom = "10px";
+                btnContainer.appendChild(downloadBtn);
+
+                container.appendChild(btnContainer);
+
+                // Scroll to result
+                mainCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function downloadCard(elementId, fileName) {
+            const element = document.getElementById(elementId);
+
+            // Temporarily remove shadow for cleaner image
+            const originalBoxShadow = element.style.boxShadow;
+            element.style.boxShadow = 'none';
+
+            html2canvas(element, {
+                scale: 3, // High resolution
+                backgroundColor: null
+            }).then(canvas => {
+                // Restore shadow
+                element.style.boxShadow = originalBoxShadow;
+
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('authorName').value = '';
+            document.getElementById('outputContainer').innerHTML = '';
+        }
+    </script>
+</body>
+
+</html>
