@@ -147,17 +147,6 @@
             gap: 8px;
         }
 
-        .btn-generate {
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
-        }
-
-        .btn-generate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
-        }
-
         .btn-clear {
             background: #fff;
             color: #ff6b6b;
@@ -275,17 +264,17 @@
 
     <div class="container">
         <h1>✨ จัดรูปแบบข้อความ</h1>
-        <p class="subtitle">สร้างรูปภาพข้อความสวยๆ ได้ง่ายๆ ในพริบตา</p>
+        <p class="subtitle">วางข้อความแล้วได้รูปภาพทันที</p>
 
         <div class="input-section">
             <div class="input-group">
                 <label for="authorName">👤 ชื่อผู้แต่ง (By ...)</label>
-                <input type="text" id="authorName" placeholder="เช่น Meena">
+                <input type="text" id="authorName" oninput="generateCards()" placeholder="เช่น Meena">
             </div>
 
             <div class="input-group">
                 <label for="inputText">📝 ข้อความ</label>
-                <textarea id="inputText" placeholder="วางข้อความที่นี่...
+                <textarea id="inputText" oninput="generateCards()" placeholder="วางข้อความที่นี่...
 ตัวอย่าง:
 ตัวผอมพี มีคู่กิน 07
 *ลิงหลอกเจ้า
@@ -301,9 +290,6 @@
             </div>
 
             <div class="controls">
-                <button class="btn-generate" onclick="generateCards()">
-                    <span>🎨</span> สร้างรูปภาพ
-                </button>
                 <button class="btn-clear" onclick="clearAll()">
                     <span>🗑️</span> ล้างข้อมูล
                 </button>
@@ -432,8 +418,6 @@
                 btnContainer.appendChild(downloadBtn);
 
                 container.appendChild(btnContainer);
-
-                mainCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         }
 
