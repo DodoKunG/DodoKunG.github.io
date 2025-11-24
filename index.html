@@ -178,12 +178,12 @@
             max-width: 400px;
             width: 100%;
             box-sizing: border-box;
-            text-align: center;
             display: flex;
             flex-direction: column;
             gap: 20px;
             box-shadow: var(--shadow-md);
             margin: 0 auto;
+            align-items: center;
         }
 
         .text-block {
@@ -195,9 +195,10 @@
             font-size: 22px;
             font-weight: bold;
             position: relative;
-            display: inline-block;
+            display: block;
             width: 100%;
             line-height: 1.4;
+            text-align: center;
         }
 
         .header-text {
@@ -227,6 +228,11 @@
             color: #000;
             word-wrap: break-word;
             overflow-wrap: break-word;
+            width: fit-content;
+            margin: 0 auto;
+            text-align: left;
+            max-width: 100%;
+            display: block;
         }
 
         .download-btn {
