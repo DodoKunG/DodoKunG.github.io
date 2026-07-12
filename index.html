@@ -2,460 +2,428 @@
 <html lang="th">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>โปรแกรมจัดรูปแบบข้อความ (Premium Style)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
-            --glass-bg: rgba(255, 255, 255, 0.95);
-            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
-            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --radius-lg: 24px;
-            --radius-md: 16px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>โปรแกรมจัดรูปแบบข้อความ (Premium Style)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Noto+Sans+Thai:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
+:root {
+--primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+--secondary-gradient: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+--glass-bg: rgba(255, 255, 255, 0.95);
+--shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+--shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
+--radius-lg: 24px;
+--radius-md: 16px;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
 
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background: var(--primary-gradient);
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-            color: #333;
-        }
+body {
+font-family: 'Sarabun', sans-serif;
+background: var(--primary-gradient);
+background-attachment: fixed;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 40px 20px;
+color: #333;
+gap: 30px;
+}
 
-        .container {
-            width: 100%;
-            max-width: 900px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            padding: 50px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+.container {
+width: 100%;
+max-width: 900px;
+background: var(--glass-bg);
+backdrop-filter: blur(20px);
+padding: 50px;
+border-radius: var(--radius-lg);
+box-shadow: var(--shadow-lg);
+animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
+@keyframes slideUp {
+from { opacity: 0; transform: translateY(40px); }
+to { opacity: 1; transform: translateY(0); }
+}
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+h1 {
+text-align: center;
+color: #4a4a4a;
+margin-bottom: 10px;
+font-size: 2.5rem;
+font-weight: 700;
+background: var(--primary-gradient);
+-webkit-background-clip: text;
+background-clip: text;
+-webkit-text-fill-color: transparent;
+}
 
-        h1 {
-            text-align: center;
-            color: #4a4a4a;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+p.subtitle {
+text-align: center;
+color: #888;
+margin-bottom: 40px;
+font-size: 1.1rem;
+}
 
-        p.subtitle {
-            text-align: center;
-            color: #888;
-            margin-bottom: 40px;
-            font-size: 1.1rem;
-        }
+.input-section {
+display: grid;
+gap: 25px;
+margin-bottom: 40px;
+}
 
-        .input-section {
-            display: grid;
-            gap: 25px;
-            margin-bottom: 40px;
-        }
+.input-group {
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+label {
+font-weight: 600;
+color: #555;
+font-size: 1rem;
+margin-left: 5px;
+}
 
-        label {
-            font-weight: 600;
-            color: #555;
-            font-size: 1rem;
-            margin-left: 5px;
-        }
+input[type="text"],
+textarea {
+width: 100%;
+padding: 16px 20px;
+border: 2px solid #eef0f5;
+border-radius: var(--radius-md);
+font-family: 'Sarabun', sans-serif;
+font-size: 16px;
+background: #f8f9fa;
+transition: all 0.3s ease;
+}
 
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #eef0f5;
-            border-radius: var(--radius-md);
-            font-family: 'Sarabun', sans-serif;
-            font-size: 16px;
-            background: #f8f9fa;
-            transition: all 0.3s ease;
-        }
+input[type="text"]:focus,
+textarea:focus {
+outline: none;
+border-color: #764ba2;
+background: #fff;
+box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1);
+}
 
-        input[type="text"]:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #764ba2;
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1);
-        }
+textarea {
+height: 200px;
+resize: vertical;
+line-height: 1.6;
+}
 
-        textarea {
-            height: 200px;
-            resize: vertical;
-            line-height: 1.6;
-        }
+.controls {
+display: flex;
+gap: 15px;
+justify-content: center;
+margin-top: 10px;
+}
 
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 10px;
-        }
+button {
+padding: 14px 32px;
+border: none;
+border-radius: 12px;
+cursor: pointer;
+font-family: 'Sarabun', sans-serif;
+font-weight: 600;
+font-size: 1rem;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+display: flex;
+align-items: center;
+gap: 8px;
+}
 
-        button {
-            padding: 14px 32px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: 'Sarabun', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.btn-clear {
+background: #fff;
+color: #ff6b6b;
+border: 2px solid #ff6b6b;
+}
 
-        .btn-clear {
-            background: #fff;
-            color: #ff6b6b;
-            border: 2px solid #ff6b6b;
-        }
+.btn-clear:hover {
+background: #ff6b6b;
+color: white;
+transform: translateY(-2px);
+}
 
-        .btn-clear:hover {
-            background: #ff6b6b;
-            color: white;
-            transform: translateY(-2px);
-        }
+.output-section {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 30px;
+padding-top: 20px;
+border-top: 1px solid #eee;
+width: 100%;
+overflow-x: auto;
+padding-bottom: 20px;
+}
 
-        .output-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 20px;
-        }
+.card {
+background: white;
+border: 1px solid #000;
+padding: 25px;
+max-width: 400px;
+width: 100%;
+box-sizing: border-box;
+display: flex;
+flex-direction: column;
+gap: 20px;
+box-shadow: var(--shadow-md);
+margin: 0 auto;
+align-items: center;
+}
 
-        .card {
-            background: white;
-            border: 1px solid #000;
-            padding: 25px;
-            max-width: 400px;
-            width: 100%;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: var(--shadow-md);
-            margin: 0 auto;
-            align-items: center;
-        }
+.text-block { width: 100%; }
 
-        .text-block {
-            width: 100%;
-        }
+.card-header {
+margin-bottom: 12px;
+font-size: 22px;
+font-weight: bold;
+position: relative;
+display: block;
+width: 100%;
+line-height: 1.4;
+text-align: center;
+}
 
-        .card-header {
-            margin-bottom: 12px;
-            font-size: 22px;
-            font-weight: bold;
-            position: relative;
-            display: block;
-            width: 100%;
-            line-height: 1.4;
-            text-align: center;
-        }
+.header-text {
+text-decoration: underline;
+text-underline-offset: 4px;
+font-weight: bold;
+color: #000;
+}
 
-        .header-text {
-            text-decoration: underline;
-            text-underline-offset: 4px;
-            font-weight: bold;
-            color: #000;
-        }
+.header-suffix {
+font-size: 0.85em;
+margin-left: 12px;
+font-weight: normal;
+color: #000;
+}
 
-        .header-suffix {
-            font-size: 0.85em;
-            margin-left: 12px;
-            font-weight: normal;
-            color: #000;
-        }
+.header-author {
+font-size: 0.65em;
+margin-left: 8px;
+font-weight: bold;
+color: #000;
+}
 
-        .header-author {
-            font-size: 0.65em;
-            margin-left: 8px;
-            font-weight: bold;
-            color: #000;
-        }
+.card-content {
+font-size: 20px;
+line-height: 1.7;
+color: #000;
+word-wrap: break-word;
+overflow-wrap: break-word;
+width: fit-content;
+margin: 0 auto;
+text-align: left;
+max-width: 100%;
+display: block;
+}
 
-        .card-content {
-            font-size: 20px;
-            line-height: 1.7;
-            color: #000;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            width: fit-content;
-            margin: 0 auto;
-            text-align: left;
-            max-width: 100%;
-            display: block;
-        }
+.download-btn {
+background: var(--secondary-gradient);
+color: white;
+padding: 14px 32px;
+border-radius: 12px;
+border: none;
+font-size: 1rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+}
 
-        .download-btn {
-            background: var(--secondary-gradient);
-            color: white;
-            padding: 14px 32px;
-            border-radius: 12px;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
-        }
+.download-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+}
 
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
-        }
+/* ===== LOTTERY TABLE STYLES ===== */
+.lottery-container {
+width: 100%;
+max-width: 960px;
+background: var(--glass-bg);
+backdrop-filter: blur(20px);
+padding: 30px 40px;
+border-radius: var(--radius-lg);
+box-shadow: var(--shadow-lg);
+animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px 20px;
-            }
+.lottery-wrapper {
+display: flex;
+gap: 12px;
+align-items: flex-start;
+overflow-x: auto;
+}
 
-            h1 {
-                font-size: 2rem;
-            }
+.lottery-table {
+border-collapse: collapse;
+font-family: 'Noto Sans Thai', sans-serif;
+font-weight: 700;
+flex-shrink: 0;
+}
 
-            .card {
-                padding: 20px;
-            }
-        }
-    </style>
+.lottery-table th,
+.lottery-table td {
+border: 2px solid #fff;
+text-align: center;
+padding: 8px 18px;
+font-size: 1.25rem;
+min-width: 64px;
+}
+
+.lottery-table .header-red {
+background-color: #8b0000;
+color: #fff;
+font-size: 1.2rem;
+letter-spacing: 0.02em;
+}
+
+.lottery-table .header-green {
+background-color: #1a5c1a;
+color: #fff;
+font-size: 1.1rem;
+}
+
+.lottery-table .row-data {
+background-color: #000;
+color: #fff;
+font-size: 1.4rem;
+font-weight: 800;
+}
+
+.lottery-table .row-empty {
+background-color: #000;
+color: #000;
+}
+
+.lottery-table .row-date {
+background-color: #000;
+color: #fff;
+font-size: 1.25rem;
+font-weight: 800;
+}
+
+[contenteditable="true"]:focus {
+outline: 2px solid #ffff00;
+outline-offset: -2px;
+}
+
+
+.lottery-table .row-yellow {
+background-color: #ffff00;
+color: #000;
+font-size: 1.35rem;
+font-weight: 800;
+padding: 12px 18px !important;
+}
+
+.lottery-table .row-red-text {
+background-color: #8b0000;
+color: #ffff00;
+font-size: 1.35rem;
+font-weight: 800;
+padding: 12px 18px !important;
+white-space: nowrap;
+}
+
+.stat-table {
+border-collapse: collapse;
+font-family: 'Sarabun', sans-serif;
+font-weight: 700;
+flex-shrink: 0;
+}
+
+.stat-table th,
+.stat-table td {
+border: 2px solid #222;
+text-align: center;
+padding: 8px 18px;
+font-size: 1.25rem;
+min-width: 64px;
+}
+
+.stat-out {
+background-color: #8b0000 !important;
+color: #fff !important;
+font-weight: 800 !important;
+font-size: 1.25rem !important;
+padding: 8px 18px !important;
+cursor: pointer;
+}
+
+.stat-not {
+background-color: #000 !important;
+color: #fff !important;
+font-weight: 800 !important;
+font-size: 1.25rem !important;
+padding: 8px 18px !important;
+cursor: pointer;
+}
+
+@media (max-width: 768px) {
+.container, .lottery-container { padding: 20px 12px; }
+h1 { font-size: 2rem; }
+.card { padding: 20px; }
+.lottery-wrapper { flex-direction: column; }
+}
+</style>
 </head>
 
 <body>
 
-    <div class="container">
-        <h1>✨ จัดรูปแบบข้อความ</h1>
-        <p class="subtitle">วางข้อความแล้วได้รูปภาพทันที</p>
+<div class="container">
+  <h1>✨ จัดรูปแบบข้อความ</h1>
+  <p class="subtitle">วางข้อความแล้วได้รูปภาพทันที</p>
 
-        <div class="input-section">
-            <div class="input-group">
-                <label for="authorName">👤 ชื่อผู้แต่ง (By ...)</label>
-                <input type="text" id="authorName" oninput="generateCards()" placeholder="เช่น Meena">
-            </div>
-
-            <div class="input-group">
-                <label for="inputText">📝 ข้อความ</label>
-                <textarea id="inputText" oninput="generateCards()" placeholder="วางข้อความที่นี่...
-ตัวอย่าง:
-ตัวผอมพี มีคู่กิน 07
-*ลิงหลอกเจ้า
-*แลกวามาแล้ว
-*คนกินแล้วเมา
-*ลดแลกแจกแถม
------------
-ไพรสินณ์อาศัย มาไปในน้ำ 31
-*เหยี่ยวถลาลม
-*มีหูมีตาหางยาว
-*ชอบกินหญ้าอ่อน
-*อยู่ในโบสถ์"></textarea>
-            </div>
-
-            <div class="controls">
-                <button class="btn-clear" onclick="clearAll()">
-                    <span>🗑️</span> ล้างข้อมูล
-                </button>
-            </div>
-        </div>
-
-        <div id="outputContainer" class="output-section">
-            <!-- Cards will be generated here -->
-        </div>
+  <div class="input-section">
+    <div class="input-group">
+      <label for="authorName">👤 ชื่อผู้แต่ง (By ...)</label>
+      <input type="text" id="authorName" oninput="generateCards()" placeholder="เช่น Meena">
     </div>
 
-    <script>
-        function generateCards() {
-            const input = document.getElementById('inputText').value;
-            const author = document.getElementById('authorName').value.trim() || "Meena";
-            const container = document.getElementById('outputContainer');
-            container.innerHTML = '';
+    <div class="input-group">
+      <label for="inputText">📝 ข้อความ</label>
+      <textarea id="inputText" oninput="generateCards()" placeholder="วางข้อความที่นี่...
+ตัวอย่าง:
+ตัวผอมพี มีคู่กิน 07 
+ลิงหลอกเจ้า
+แลกวามาแล้ว
+คนกินแล้วเมา
+ลดแลกแจกแถม
+-----------
+ไพรสินณ์อาศัย มาไปในน้ำ 3
+เหยี่ยวถลาลม
+มีหูมีตาหางยาว
+ชอบกินหญ้าอ่อน
+อยู่ในโบสถ์"></textarea>
+    </div>
 
-            if (!input.trim()) return;
+    <div class="controls">
+      <button class="btn-clear" onclick="clearAll()">
+        <span>🗑️</span> ล้างข้อมูล
+      </button>
+    </div>
+  </div>
 
-            const lines = input.split('\n');
-            const blocks = [];
-            let currentBlock = null;
+  <div id="outputContainer" class="output-section">
+    <!-- Cards will be generated here -->
+  </div>
+</div>
 
-            lines.forEach(line => {
-                const trimmed = line.trim();
-                if (!trimmed) return;
-
-                if (/^[-_]+$/.test(trimmed)) return;
-
-                if (trimmed.startsWith('*')) {
-                    if (currentBlock) {
-                        currentBlock.items.push(trimmed.substring(1).trim());
-                    }
-                } else if (/^\d+$/.test(trimmed)) {
-                    if (currentBlock) {
-                        currentBlock.numberPart = trimmed;
-                    }
-                } else {
-                    if (currentBlock) {
-                        blocks.push(currentBlock);
-                    }
-
-                    let headerText = trimmed;
-                    let numberPart = '';
-
-                    const match = trimmed.match(/^(.*?)(\s+(\d+))?$/);
-                    if (match) {
-                        headerText = match[1];
-                        if (match[3]) {
-                            numberPart = match[3];
-                        }
-                    }
-
-                    currentBlock = {
-                        headerText: headerText,
-                        numberPart: numberPart,
-                        items: []
-                    };
-                }
-            });
-
-            if (currentBlock) {
-                blocks.push(currentBlock);
-            }
-
-            const mainCard = document.createElement('div');
-            mainCard.className = 'card';
-            mainCard.id = 'main-card';
-
-            let hasContent = false;
-
-            blocks.forEach((blockData, index) => {
-                hasContent = true;
-                const headerText = blockData.headerText;
-                const numberPart = blockData.numberPart || '';
-                const items = blockData.items;
-
-                let headerSuffix = '';
-
-                if (numberPart) {
-                    if (index === 0) {
-                        headerSuffix = `ช.${numberPart}`;
-                        headerSuffix += ` <span class="header-author">by ${author}</span>`;
-                    } else if (index === 1) {
-                        headerSuffix = `ย.${numberPart}`;
-                    } else {
-                        headerSuffix = numberPart;
-                    }
-                } else {
-                    if (index === 0) {
-                        headerSuffix = `ช.`;
-                        headerSuffix += ` <span class="header-author">by ${author}</span>`;
-                    } else if (index === 1) {
-                        headerSuffix = `ย.`;
-                    }
-                }
-
-                const blockDiv = document.createElement('div');
-                blockDiv.className = 'text-block';
-
-                const headerDiv = document.createElement('div');
-                headerDiv.className = 'card-header';
-                headerDiv.innerHTML = `<span class="header-text">${headerText}</span><span class="header-suffix">${headerSuffix}</span>`;
-                blockDiv.appendChild(headerDiv);
-
-                const contentDiv = document.createElement('div');
-                contentDiv.className = 'card-content';
-                const contentText = items.join(' / ');
-                contentDiv.textContent = contentText;
-                blockDiv.appendChild(contentDiv);
-
-                mainCard.appendChild(blockDiv);
-            });
-
-            if (hasContent) {
-                container.appendChild(mainCard);
-
-                const downloadBtn = document.createElement('button');
-                downloadBtn.className = 'download-btn';
-                downloadBtn.innerHTML = '<span>💾</span> บันทึกเป็นรูปภาพ';
-                downloadBtn.onclick = () => downloadCard('main-card', 'formatted_text.png');
-
-                const btnContainer = document.createElement('div');
-                btnContainer.style.marginBottom = "10px";
-                btnContainer.appendChild(downloadBtn);
-
-                container.appendChild(btnContainer);
-            }
-        }
-
-        function downloadCard(elementId, fileName) {
-            const element = document.getElementById(elementId);
-
-            const originalBoxShadow = element.style.boxShadow;
-            element.style.boxShadow = 'none';
-
-            html2canvas(element, {
-                scale: 3,
-                backgroundColor: null,
-                windowWidth: 1200
-            }).then(canvas => {
-                element.style.boxShadow = originalBoxShadow;
-
-                const link = document.createElement('a');
-                link.download = fileName;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        }
-
-        function clearAll() {
-            document.getElementById('inputText').value = '';
-            document.getElementById('authorName').value = '';
-            document.getElementById('outputContainer').innerHTML = '';
-        }
-    </script>
-</body>
-
-</html>
+<!-- ===== LOTTERY TABLE SECTION ===== -->
+<div class="lottery-container">
+  <div style="overflow-x:auto;">
+    <table class="lottery-table" id="lottery-main">
+      <thead>
+        <tr>
+          <th class="header-red" colspan="6" contenteditable="true" data-id="main-title">ตัวออก วังปริง 07�#Sc���F���F�6�73�&�VFW"�&VB"6��7��#""&�w7��#"#��~�^���������^���~��^��.��~�N����'#��������F����G#��G#��F�6�73�&�VFW"�w&VV�#��~����~�^����F���F�6�73�&�VFW"�w&VV�#�������#��F���F�6�73�&�VFW"�w&VV�#���.�~����F���F�6�73�&�VFW"�w&VV�#��~����~�^����F���F�6�73�&�VFW"�w&VV�#�������#��F���F�6�73�&�VFW"�w&VV�#���.�~����F����G#���F�VC��F&�G���G#��FB6�73�'&�r�FFR#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#�S��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�R#�3��FC��FB6�73�'&�r�FFR#�c��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�f#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�fR#���FC��FB6�73�'7FB���B"FF֖C�'3#���FC��FB6�73�'7FB��WB"FF֖C�'3#�S��FC���G#��G#��FB6�73�'&�r�FFR#�#��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�&#�S��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�&R#�3S��FC��FB6�73�'&�r�FFR#�s��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�v#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�vR#���FC��FB6�73�'7FB���B"FF֖C�'3"#�#��FC��FB6�73�'7FB��WB"FF֖C�'32#�c��FC���G#��G#��FB6�73�'&�r�FFR#�3��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�6#�#3��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�6R#�##��FC��FB6�73�'&�r�FFR#����FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&��#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&��R#���FC��FB6�73�'7FB���B"FF֖C�'3B#�3��FC��FB6�73�'7FB��WB"FF֖C�'3R#�3#��FC���G#��G#��FB6�73�'&�r�FFR#�C��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�F#�3S��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�FR#�3��FC��FB6�73�'&�r�FFR#����FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&��#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&��R#���FC��FB6�73�'7FB���B"FF֖C�'3b#�C��FC��FB6�73�'7FB���B"FF֖C�'3r#�#��FC���G#��G#��FB6�73�'&�r�FFR#�S��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�V#�c��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�VR#�#3��FC��FB6�73�'&�r�FFR#�#��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�##���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#R#���FC��FB6�73�'7FB���B"FF֖C�'3�#�c��FC��FB6�73�'7FB���B"FF֖C�'3�#�s��FC���G#��G#��FB6�73�'&�r�FFR#�c��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�f#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�fR#�3S��FC��FB6�73�'&�r�FFR#�#��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�##���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#R#���FC��FB6�73�'7FB��WB"FF֖C�'3#�s��FC��FB6�73�'7FB���B"FF֖C�'3#�#C��FC���G#��G#��FB6�73�'&�r�FFR#�s��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�v#����FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�vR#�#��FC��FB6�73�'&�r�FFR#�##��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#&#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#&R#���FC��FB6�73�'7FB���B"FF֖C�'3"#����FC��FB6�73�'7FB��WB"FF֖C�'32#�#��FC���G#��G#��FB6�73�'&�r�FFR#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&ӆ#�33��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&ӆR#�#S��FC��FB6�73�'&�r�FFR#�#3��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#6#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#6R#���FC��FB6�73�'7FB���B"FF֖C�'3B#����FC��FB6�73�'7FB���B"FF֖C�'3R#�33��FC���G#��G#��FB6�73�'&�r�FFR#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&Ӗ#�C��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&ӖR#�S��FC��FB6�73�'&�r�FFR#�#C��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#F#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#FR#���FC��FB6�73�'7FB���B"FF֖C�'3b#���FC��FB6�73�'7FB���B"FF֖C�'3r#����FC���G#��G#��FB6�73�'&�r�FFR#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#�#S��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�R#�#��FC��FB6�73�'&�r�FFR#�#S��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#V#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#VR#���FC��FB6�73�'7FB��WB"FF֖C�'3�#���FC��FB6�73�'7FB���B"FF֖C�'3�#�S��FC���G#��G#��FB6�73�'&�r�FFR#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#�C��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�R#�3c��FC��FB6�73�'&�r�FFR#�#c��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#f#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#fR#���FC��FB6�73�'7FB���B"FF֖C�'3##�3��FC��FB6�73�'7FB��WB"FF֖C�'3##�C��FC���G#��G#��FB6�73�'&�r�FFR#�#��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�&#�3c��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�&R#���FC��FB6�73�'&�r�FFR#�#s��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#v#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#vR#���FC��FB6�73�'7FB���B"FF֖C�'3#"#����FC��FB6�73�'7FB���B"FF֖C�'3#2#�#s��FC���G#��G#��FB6�73�'&�r�FFR#�3��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�6#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�6R#���FC��FB6�73�'&�r�FFR#�#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#�#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#�R#���FC��FB6�73�'7FB���B"FF֖C�'3#B#�#��FC��FB6�73�'7FB���B"FF֖C�'3#R#�##��FC���G#��G#��FB6�73�'&�r�FFR#�C��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�F#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�FR#���FC��FB6�73�'&�r�FFR#�#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#�#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�#�R#���FC��FB6�73�'7FB���B"FF֖C�'3#b#�#3��FC��FB6�73�'7FB���B"FF֖C�'3#r#�3��FC���G#��G#��FB6�73�'&�r�FFR#�S��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�V#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�VR#���FC��FB6�73�'&�r�FFR#�3��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�3#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�3R#���FC��FB6�73�'7FB���B"FF֖C�'3#�#�#S��FC��FB6�73�'7FB���B"FF֖C�'3#�#�3S��FC���G#��G#��FB6�73�'&�r�V�G�"6��7��#2#���FC��FB6�73�'&�r�FFR#�3��FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�3#���FC��FB6�73�'&�r�FF"6��FV�FVF�F&�S�'G'VR"FF֖C�&�3R#���FC��FB6�73�'7FB���B"FF֖C�'33#�#c��FC��FB6�73�'7FB���B"FF֖C�'33#�3��FC���G#��G#��FB6�73�'&�rזV���r"6��7��#b"6��FV�FVF�F&�S�'G'VR"FF֖C�'�V���r��&V�#���^�.�~�^���.��~�N��������b�c���FC��FB6�73�'7FB���B"FF֖C�'33"#�#���FC��FB6�73�'7FB���B"FF֖C�'332#�#���FC���G#��G#��FB6�73�'&�r�&VB�FW�B"6��7��#b"6��FV�FVF�F&�S�'G'VR"FF֖C�'&VB��V�&W'2#�"�R�r��2�#�#"�3"���FC��FB6�73�'7FB���B"FF֖C�'33B#�3C��FC��FB6�73�'7FB���B"FF֖C�'33R#�3c��FC���G#���F&�G����F&�S���F�c��F�b7G��S�'FW�B�Ɩv�6V�FW#��&v���F��g��F�7���f�W��v�'���W7F�g��6��FV�C�6V�FW#�f�W��w&�w&�#��'WGF��6�73�&F�v���B�'F�"��6Ɩ6��&F�v���D��GFW'���#�	�+��N�.�~�����.���^�N�^�.�>�.�s��'WGF����'WGF��6�73�&F�v���B�'F�"7G��S�&&6�w&�V�C�Ɩ�V"�w&F�V�B�3VFVr�3V3�3&C�&B��"��6Ɩ6��&6''��fW%V�G&vₒ#�	�8��.��.���N��^�.�N����������'WGF����'WGF���C�'V�F��'F�"6�73�&F�v���B�'F�"7G��S�&&6�w&�V�C�Ɩ�V"�w&F�V�B�3VFVr�3CCB�3ssr���6�G���C�"��6Ɩ6��'V�F���GFW'���"F�6&�VC�(j�����.��������^�����'WGF����'WGF��6�73�&F�v���B�'F�"7G��S�&&6�w&�V�C�Ɩ�V"�w&F�V�B�3VFVr�3CCB�3�����"��6Ɩ6��'&W6WE7FB��#�	�HB�>�^����~�R7FC��'WGF����'WGF��6�73�&F�v���B�'F�"7G��S�&&6�w&�V�C�Ɩ�V"�w&F�V�B�3VFVr�3�#�663��"��6Ɩ6��&�b�6��f�&҂~�^���.�~�.��������^������"���.�~���~����~����C�r��6�V$��&��tWfV��r��#�	�y����^���.�~������"���.�~����'WGF�����F�c���F�cࠣ�67&�C�gV�7F���vV�W&FT6&G2����6��7B��WB�F�7V�V�B�vWDV�V�V�D'��B�v��WEFW�Br��f�VS��6��7BWF��"�F�7V�V�B�vWDV�V�V�D'��B�vWF��$��Rr��f�VR�G&�҂���$�VV�#��6��7B6��F��W"�F�7V�V�B�vWDV�V�V�D'��B�v�WGWD6��F��W"r���6��F��W"���W$�D���rs����b���WB�G&�҂��&WGW&㰠�6��7BƖ�W2���WB�7ƗB�u��r���6��7B&��6�2��Ӱ��WB7W'&V�D&��6���V�ð��Ɩ�W2�f�$V6��Ɩ�R����6��7BG&���VB�Ɩ�R�G&�҂����b�G&���VB�&WGW&㰢�b�����ҲB��FW7B�G&���VB��&WGW&㰠��b�G&���VB�7F'G5v�F��r�r�����b�7W'&V�D&��6��7W'&V�D&��6��FV�2�W6��G&���VB�7V'7G&��r���G&�҂�����V�6R�b����B�B��FW7B�G&���VB�����b�7W'&V�D&��6��7W'&V�D&��6���V�&W%'B�G&���VC���V�6R���b�7W'&V�D&��6��&��6�2�W6��7W'&V�D&��6������WB�VFW%FW�B�G&���VC���WB�V�&W%'B�rs��6��7B�F6��G&���VB��F6�������2���B����B򓰢�b��F6�����VFW%FW�B��F6��Ӱ��b��F6��5Ғ�V�&W%'B��F6��5Ӱ�Р�7W'&V�D&��6����VFW%FW�B��V�&W%'B��FV�3���Ӱ�Тғ����b�7W'&V�D&��6��&��6�2�W6��7W'&V�D&��6�����6��7B���6&B�F�7V�V�B�7&VFTV�V�V�B�vF�br������6&B�6�74��R�v6&Bs�����6&B�B�v����6&Bs����WB�46��FV�B�f�6S���&��6�2�f�$V6���&��6�FF���FW�������46��FV�B�G'VS��6��7B��VFW%FW�B��FV�2��&��6�FF��6��7B�V�&W%'B�&��6�FF��V�&W%'B��rs����WB�VFW%7Vff���rs���b��V�&W%'B����b���FW��������VFW%7Vff������G��V�&W%'G����VFW%7Vff�����7�6�73�&�VFW"�WF��"#�'�G�WF��'���7�����V�6R�b���FW��������VFW%7Vff����"�G��V�&W%'G����V�6R���VFW%7Vff����V�&W%'C��Т�V�6R���b���FW��������VFW%7Vff���������VFW%7Vff�����7�6�73�&�VFW"�WF��"#�'�G�WF��'���7�����V�6R�b���FW��������VFW%7Vff����"���ТР�6��7B&��6�F�b�F�7V�V�B�7&VFTV�V�V�B�vF�br���&��6�F�b�6�74��R�wFW�B�&��6�s���6��7B�VFW$F�b�F�7V�V�B�7&VFTV�V�V�B�vF�br����VFW$F�b�6�74��R�v6&BֆVFW"s���VFW$F�b���W$�D����7�6�73�&�VFW"�FW�B#�G��VFW%FW�G���7���7�6�73�&�VFW"�7Vff��#�G��VFW%7Vff�����7����&��6�F�b�V�D6���B��VFW$F�b����6��7B6��FV�DF�b�F�7V�V�B�7&VFTV�V�V�B�vF�br���6��FV�DF�b�6�74��R�v6&B�6��FV�Bs��6��FV�DF�b�FW�D6��FV�B��FV�2����r�r���&��6�F�b�V�D6���B�6��FV�DF�b�������6&B�V�D6���B�&��6�F�b���ғ����b��46��FV�B���6��F��W"�V�D6���B����6&B����6��7BF�v���D'F��F�7V�V�B�7&VFTV�V�V�B�v'WGF��r���F�v���D'F��6�74��R�vF�v���B�'F�s��F�v���D'F����W$�D���s�7��	�+���7��������~�n�����~���>������.��s��F�v���D'F����6Ɩ6������F�v���D6&B�v����6&Br�vf�&�GFVE�FW�B��rr����6��7B'F�6��F��W"�F�7V�V�B�7&VFTV�V�V�B�vF�br���'F�6��F��W"�7G��R��&v��&�GF���#�#��'F�6��F��W"�V�D6���B�F�v���D'F⓰�6��F��W"�V�D6���B�'F�6��F��W"���ЧР�gV�7F���F�v���D6&B�V�V�V�D�B�f��T��R���6��7BV�V�V�B�F�7V�V�B�vWDV�V�V�D'��B�V�V�V�D�B���6��7B�&�v���&��6�F�r�V�V�V�B�7G��R�&��6�F�s��V�V�V�B�7G��R�&��6�F�r�v���Rs����F��&6�f2�V�V�V�B���66�S�2��&6�w&�V�D6���#��V����v��F�uv�GF��# �Ғ�F�V�6�f2����V�V�V�B�7G��R�&��6�F�r��&�v���&��6�F�s��6��7BƖ��F�7V�V�B�7&VFTV�V�V�B�vr���Ɩ��F�v���B�f��T��S��Ɩ��&Vb�6�f2�F�FFU$v��vR��rr���Ɩ��6Ɩ6�����ғ��Р�gV�7F���6�V$����F�7V�V�B�vWDV�V�V�D'��B�v��WEFW�Br��f�VR�rs��F�7V�V�B�vWDV�V�V�D'��B�vWF��$��Rr��f�VR�rs��F�7V�V�B�vWDV�V�V�D'��B�v�WGWD6��F��W"r����W$�D���rs��Р����������EDU%�D$�S���6�7F�&vR6fR���B����ЦgV�7F���vWE7F�&T�W�����6��7BF�F�R�F�7V�V�B�VW'�6V�V7F�"�u�FF֖C�&����F�F�R%�r����b�F�F�R�&WGW&�v��GFW'��w�FVfV�Bs��6��7B�F6��F�F�R�FW�D6��FV�B��F6����G��'ҕ���G�"�GҒ򓰢�b��F6��&WGW&�v��GFW'��w�FVfV�Bs��&WGW&���GFW'��w�G��F6����E7F'B�"�sr���G��F6��%����Р�gV�7F���vWD��GFW'�f��V��R����6��7BF�F�R�F�7V�V�B�VW'�6V�V7F�"�u�FF֖C�&����F�F�R%�r����b�F�F�R�&WGW&�v��GFW'��v�w&��r��rs��6��7B�F6��F�F�R�FW�D6��FV�B��F6����G��'ҕ���G�"�GҒ򓰢�b��F6��&WGW&�v��GFW'��v�w&��r��rs��&WGW&���GFW'��v�w&��u�G��F6����E7F'B�"�sr���G��F6��%����v��Р��������T�D�5�5DT�����Ц6��7BV�F�7F6���Ӱ�6��7B���T�D��3���gV�7F���6�6��B����6��7BFF��Ӱ�F�7V�V�B�VW'�6V�V7F�$�u�FF֖E�r��f�$V6��V������b�V��4GG&�'WFR�v6��FV�FVF�F&�Rr��FF�wFW�E�r�V��FF6WB�E��V��FW�D6��FV�B�G&�҂���ғ��F�7V�V�B�VW'�6V�V7F�$�u�FF֖E��'2%�r��f�$V6��V�����FF�v6�75�r�V��FF6WB�E��V��6�74��S��ғ��&WGW&��4���7G&��v�g��FF���Р�gV�7F���W6�V�F���V�F�7F6��W6��6�6��B������b�V�F�7F6���V�wF�����T�D�V�F�7F6��6��gB����WFFUV�F�'Fₓ��Р�gV�7F���V�F���GFW'������b�V�F�7F6���V�wF�����&WGW&㰢6��7B&Wb��4���'6R�V�F�7F6��������F�7V�V�B�VW'�6V�V7F�$�u�FF֖E�r��f�$V6��V�����6��7BF��wFW�E�r�V��FF6WB�C��6��7B6��v6�75�r�V��FF6WB�C���b�V��4GG&�'WFR�v6��FV�FVF�F&�Rr�bb&We�F����V�FVf��VB�V��FW�D6��FV�B�&We�F�Ӱ��b�&We�6����V�FVf��VB�V��6�74��R�&We�6�Ӱ�ғ��F�7V�V�B�VW'�6V�V7F�$�u�FF֖BC�&%�r��f�$V6��6V�������b�6V���FF6WB�Bbb6V���FF6WB�B�7F'G5v�F��v�r��ǔ��ƖF��6V���ғ��6fT��GFW'�����WFFUV�F�'Fₓ��Р�gV�7F���WFFUV�F�'Fₒ��6��7B'F��F�7V�V�B�vWDV�V�V�D'��B�wV�F��'F�r����b�'F�&WGW&㰢'F��F�6&�VB�V�F�7F6���V�wF������'F��7G��R��6�G��V�F�7F6���V�wF�����s�Br�ss��'F��F�F�R�V�F�7F6���V�wF�����~�N�����^����N�>�>�����.��������^���r��.��������^����N�N��G�V�F�7F6���V�wF���N�>����v��Р�gV�7F���6fT��GFW'�����6��7BFF��Ӱ���6fRVF�F&�R6V��2�FW�B6��FV�B��F�7V�V�B�VW'�6V�V7F�$�u�FF֖E�r��f�$V6��V������b�V��4GG&�'WFR�v6��FV�FVF�F&�Rr����FF�wFW�E�r�V��FF6WB�E��V��FW�D6��FV�B�G&�҂���Тғ����6fR7FB6V��6�76W0�F�7V�V�B�VW'�6V�V7F�$�u�FF֖E��'2%�r��f�$V6��V�����FF�v6�75�r�V��FF6WB�E��V��6�74��S��ғ����6�7F�&vR�6WD�FV҆vWE7F�&T�W�����4���7G&��v�g��FF����Р�gV�7F�����D��GFW'�����6��7B&r���6�7F�&vR�vWD�FV҆vWE7F�&T�W�������b�&r�&WGW&㰢6��7BFF��4���'6R�&r���F�7V�V�B�VW'�6V�V7F�$�u�FF֖E�r��f�$V6��V�����6��7BFW�D�W��wFW�E�r�V��FF6WB�C��6��7B6�74�W��v6�75�r�V��FF6WB�C���b�V��4GG&�'WFR�v6��FV�FVF�F&�Rr�bbFF�FW�D�W����V�FVf��VB���V��FW�D6��FV�B�FF�FW�D�W�Ӱ�Т�b�FF�6�74�W����V�FVf��VB���V��6�74��R�FF�6�74�W�Ӱ�Тғ��Р�gV�7F���F�v���D��GFW'�����6��7BF&��F�7V�V�B�vWDV�V�V�D'��B�v��GFW'�����r���6��7B�GW&�r�F&���fg6WEv�GF���6��7B�GW&Ă�F&���fg6WD�V�v�C��6��7BF&vWEr�S' = 1052
