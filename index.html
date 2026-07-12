@@ -276,9 +276,10 @@ flex-shrink: 0;
 .lottery-table td {
 border: 2px solid #fff;
 text-align: center;
-padding: 8px 18px;
+padding: 5px 14px;
 font-size: 1.25rem;
-min-width: 64px;
+min-width: 80px;
+white-space: nowrap;
 }
 
 .lottery-table .header-red {
@@ -286,6 +287,7 @@ background-color: #8b0000;
 color: #fff;
 font-size: 1.2rem;
 letter-spacing: 0.02em;
+white-space: normal;
 }
 
 .lottery-table .header-green {
@@ -347,9 +349,9 @@ flex-shrink: 0;
 .stat-table td {
 border: 2px solid #222;
 text-align: center;
-padding: 8px 18px;
+padding: 5px 14px;
 font-size: 1.25rem;
-min-width: 64px;
+min-width: 80px;
 }
 
 .stat-out {
@@ -691,7 +693,7 @@ function downloadLottery() {
   const tbl = document.getElementById('lottery-main');
   const naturalW = tbl.offsetWidth;
   const naturalH = tbl.offsetHeight;
-  const targetW = 1052;
+  const targetW = 1400;
   const scaleVal = targetW / naturalW;
   html2canvas(tbl, {
     scale: scaleVal,
