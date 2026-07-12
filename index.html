@@ -783,46 +783,11 @@ function syncDate() {
   yellow.textContent = prefix + ' ' + monthStr + '/' + yearStr;
 }
 
-// Track old value for un-highlight logic
-let _prevCellValue = '';
 document.addEventListener('focus', e => {
   if (e.target.hasAttribute('contenteditable')) {
-    _prevCellValue = e.target.textContent.trim();
     pushUndo();
   }
 }, true);
-
-// Auto-highlight stat cell when number typed in เช้า/เย็น
-// Also un-highlight old number if no other cell still has it
-function autoHighlightStat(cell) {
-  const id = cell.dataset.id;
-  if (!id || !/^m\d+[ae]$/.test(id)) return;
-
-  const newNum = parseInt(cell.textContent.trim(), 10);
-  const oldNum = parseInt(_prevCellValue, 10);
-
-  // Un-highlight old number if it no longer appears anywhere
-  if (!isNaN(oldNum) && oldNum >= 1 && oldNum <= 36 && oldNum !== newNum) {
-    const oldPadded = String(oldNum).padStart(2, '0');
-    const stillUsed = Array.from(document.querySelectorAll('[data-id]')).some(el => {
-      if (!/^m\d+[ae]$/.test(el.dataset.id || '')) return false;
-      return parseInt(el.textContent.trim(), 10) === oldNum;
-    });
-    if (!stillUsed) {
-      document.querySelectorAll('[data-id^="s"]').forEach(td => {
-        if (td.textContent.trim() === oldPadded) td.className = 'stat-not';
-      });
-    }
-  }
-
-  // Highlight new number
-  if (!isNaN(newNum) && newNum >= 1 && newNum <= 36) {
-    const newPadded = String(newNum).padStart(2, '0');
-    document.querySelectorAll('[data-id^="s"]').forEach(td => {
-      if (td.textContent.trim() === newPadded) td.className = 'stat-out';
-    });
-  }
-}
 
 // Reset all stat cells to stat-not (for new month)
 function resetStat() {
@@ -834,11 +799,11 @@ function resetStat() {
   saveLottery();
 }
 
-// Auto-save on edit + check holiday + sync date
+// Auto-save on edit + check holiday + sync date + sync stat
 document.addEventListener('input', e => {
   if (e.target.hasAttribute('contenteditable')) {
     applyHoliday(e.target);
-    autoHighlightStat(e.target);
+    resyncStat();
     if (e.target.dataset.id === 'main-title') syncDate();
     saveLottery();
   }
