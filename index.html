@@ -643,6 +643,7 @@ function undoLottery() {
   document.querySelectorAll('[data-id$="a"]').forEach(cell => {
     if (cell.dataset.id && cell.dataset.id.startsWith('m')) applyHoliday(cell);
   });
+  resyncStat();
   saveLottery();
   updateUndoBtn();
 }
@@ -736,6 +737,7 @@ function clearMorningEvening() {
       el.style.display = '';
     }
   });
+  resyncStat();
   saveLottery();
 }
 
@@ -851,8 +853,23 @@ document.querySelectorAll('[data-id^="s"]').forEach(td => {
   });
 });
 
+// Derive stat cell classes from actual data cell values (source of truth)
+function resyncStat() {
+  const used = new Set();
+  document.querySelectorAll('[data-id]').forEach(el => {
+    if (/^m\d+[ae]$/.test(el.dataset.id || '')) {
+      const n = parseInt(el.textContent.trim(), 10);
+      if (!isNaN(n) && n >= 1 && n <= 36) used.add(String(n).padStart(2, '0'));
+    }
+  });
+  document.querySelectorAll('[data-id^="s"]').forEach(td => {
+    td.className = used.has(td.textContent.trim()) ? 'stat-out' : 'stat-not';
+  });
+}
+
 // Load saved data on page load
 loadLottery();
+resyncStat();
 // Re-apply holiday merges after load
 document.querySelectorAll('[data-id$="a"]').forEach(cell => {
   if (cell.dataset.id && cell.dataset.id.startsWith('m')) applyHoliday(cell);
