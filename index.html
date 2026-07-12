@@ -378,6 +378,35 @@ h1 { font-size: 2rem; }
 .card { padding: 20px; }
 .lottery-wrapper { flex-direction: column; }
 }
+
+/* ===== WHITE THEME ===== */
+.theme-light .lottery-table th,
+.theme-light .lottery-table td {
+  border-color: #555 !important;
+}
+.theme-light .lottery-table .row-data {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+.theme-light .lottery-table .row-date {
+  background-color: #ddd !important;
+  color: #000 !important;
+}
+.theme-light .lottery-table .row-empty {
+  background-color: #fff !important;
+  color: #fff !important;
+}
+.theme-light .stat-not {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+.theme-light .stat-table th,
+.theme-light .stat-table td {
+  border-color: #555 !important;
+}
+.theme-light {
+  background: #f0f0f0 !important;
+}
 </style>
 </head>
 
@@ -463,6 +492,7 @@ h1 { font-size: 2rem; }
     </table>
   </div>
   <div style="text-align:center;margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <button id="theme-btn" class="download-btn" style="background:linear-gradient(135deg,#555,#888);" onclick="toggleTheme()">☀️ ธีมขาว</button>
     <button class="download-btn" onclick="downloadLottery()">💾 ดาวน์โหลดตาราง</button>
     <button class="download-btn" style="background:linear-gradient(135deg,#1a5c1a,#2d8a2d);" onclick="carryOverUndrawn()">📋 ยกยอดเลขไม่ออก</button>
     <button id="undo-btn" class="download-btn" style="background:linear-gradient(135deg,#444,#777);opacity:0.4;" onclick="undoLottery()" disabled>↩️ ย้อนกลับ</button>
@@ -834,8 +864,30 @@ function resyncStat() {
   });
 }
 
+// ===== THEME TOGGLE =====
+function toggleTheme() {
+  const lc = document.querySelector('.lottery-container');
+  const btn = document.getElementById('theme-btn');
+  const isLight = lc.classList.toggle('theme-light');
+  btn.textContent = isLight ? '🌙 ธีมดำ' : '☀️ ธีมขาว';
+  btn.style.background = isLight
+    ? 'linear-gradient(135deg,#222,#555)'
+    : 'linear-gradient(135deg,#555,#888)';
+  localStorage.setItem('lottery_theme', isLight ? 'light' : 'dark');
+}
+
+function applyTheme() {
+  const saved = localStorage.getItem('lottery_theme');
+  if (saved === 'light') {
+    document.querySelector('.lottery-container').classList.add('theme-light');
+    const btn = document.getElementById('theme-btn');
+    if (btn) { btn.textContent = '🌙 ธีมดำ'; btn.style.background = 'linear-gradient(135deg,#222,#555)'; }
+  }
+}
+
 // Load saved data on page load
 loadLottery();
+applyTheme();
 resyncStat();
 // Re-apply holiday merges after load
 document.querySelectorAll('[data-id$="a"]').forEach(cell => {
