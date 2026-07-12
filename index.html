@@ -3,11 +3,15 @@
 
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="วังปริง">
 <meta name="mobile-web-app-capable" content="yes">
-<title>โปรแกรมจัดรูปแบบข้อความ (Premium Style)</title>
+<meta name="theme-color" content="#667eea">
+<meta name="description" content="ตารางหวยวังปริง จัดรูปแบบข้อความ">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF8mlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNy4yLWMwMDAgNzkuMWI2NWE3OWI0LCAyMDIyLzA2LzEzLTIyOjAxOjAxICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjMuNSAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo0MzU2MzVENkE1QzExMUVEQkQzOEE5MkM4NjM4OUY2OSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo0MzU2MzVEN0E1QzExMUVEQkQzOEE5MkM4NjM4OUY2OSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjQzNTYzNUQ0QTVDMTExRURCRDM4QTkyQzg2Mzg5RjY5IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjQzNTYzNUQ1QTVDMTExRURCRDM4QTkyQzg2Mzg5RjY5Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+">
+<title>วังปริง — ตารางหวย</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Noto+Sans+Thai:wght@400;700;800&display=swap" rel="stylesheet">
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
@@ -25,6 +29,13 @@
 box-sizing: border-box;
 margin: 0;
 padding: 0;
+}
+
+/* iOS PWA: fix contenteditable typing */
+[contenteditable] {
+-webkit-user-select: text !important;
+user-select: text !important;
+-webkit-touch-callout: default;
 }
 
 body {
@@ -824,6 +835,23 @@ document.addEventListener('focus', e => {
     pushUndo();
   }
 }, true);
+
+// iOS standalone: force keyboard to open on tap
+document.addEventListener('touchend', e => {
+  const el = e.target.closest('[contenteditable="true"]');
+  if (el) {
+    setTimeout(() => {
+      el.focus();
+      // place cursor at end
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }, 50);
+  }
+}, {passive: true});
 
 // Reset all stat cells to stat-not (for new month)
 function resetStat() {
