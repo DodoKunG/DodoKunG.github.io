@@ -396,6 +396,12 @@ h1 { font-size: 2rem; }
 .lottery-wrapper { flex-direction: column; }
 }
 
+/* Holiday cell */
+.holiday-cell {
+  background-color: #cd5c5c !important;
+  color: #fff !important;
+}
+
 /* ===== WHITE THEME ===== */
 .theme-light .lottery-table th,
 .theme-light .lottery-table td {
@@ -847,14 +853,12 @@ function applyHoliday(cell) {
   if (cell.textContent.trim().includes('หยุด')) {
     cell.setAttribute('colspan', '2');
     cell.style.textAlign = 'center';
-    cell.style.backgroundColor = '#cd5c5c';
-    cell.style.color = '#fff';
+    cell.classList.add('holiday-cell');
     eve.style.display = 'none';
   } else {
     cell.setAttribute('colspan', '1');
     cell.style.textAlign = '';
-    cell.style.backgroundColor = '';
-    cell.style.color = '';
+    cell.classList.remove('holiday-cell');
     eve.style.display = '';
   }
 }
