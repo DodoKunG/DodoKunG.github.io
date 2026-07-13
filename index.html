@@ -734,10 +734,37 @@ function loadLottery() {
   });
 }
 
+function scaleTableToFit() {
+  const tbl = document.getElementById('lottery-main');
+  const wrapper = tbl.closest('[style*="overflow"]') || tbl.parentElement;
+  tbl.style.transform = '';
+  tbl.style.transformOrigin = '';
+  wrapper.style.height = '';
+  const availW = wrapper.clientWidth || document.querySelector('.lottery-container').clientWidth;
+  const tblW = tbl.scrollWidth;
+  if (tblW > availW) {
+    const s = availW / tblW;
+    tbl.style.transform = `scale(${s})`;
+    tbl.style.transformOrigin = 'top left';
+    wrapper.style.height = (tbl.offsetHeight * s) + 'px';
+    wrapper.style.overflow = 'hidden';
+  }
+}
+
 function downloadLottery() {
   const tbl = document.getElementById('lottery-main');
+  const wrapper = tbl.parentElement;
+  // Reset scale for full-res capture
+  const savedT = tbl.style.transform;
+  const savedO = tbl.style.transformOrigin;
+  const savedH = wrapper.style.height;
+  const savedOv = wrapper.style.overflow;
+  tbl.style.transform = '';
+  tbl.style.transformOrigin = '';
+  wrapper.style.height = '';
+  wrapper.style.overflow = '';
+
   const naturalW = tbl.offsetWidth;
-  const naturalH = tbl.offsetHeight;
   const targetW = 1600;
   const scaleVal = targetW / naturalW;
   html2canvas(tbl, {
@@ -745,6 +772,11 @@ function downloadLottery() {
     backgroundColor: '#000000',
     windowWidth: naturalW
   }).then(canvas => {
+    // Restore scale
+    tbl.style.transform = savedT;
+    tbl.style.transformOrigin = savedO;
+    wrapper.style.height = savedH;
+    wrapper.style.overflow = savedOv;
     const link = document.createElement('a');
     link.download = getLotteryFilename();
     link.href = canvas.toDataURL('image/png');
@@ -926,6 +958,8 @@ document.querySelectorAll('[data-id$="a"]').forEach(cell => {
   if (cell.dataset.id && cell.dataset.id.startsWith('m')) applyHoliday(cell);
 });
 updateUndoBtn();
+scaleTableToFit();
+window.addEventListener('resize', scaleTableToFit);
 </script>
 </body>
 
