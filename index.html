@@ -447,6 +447,13 @@ h1 { font-size: 2rem; }
 .theme-light {
   background: #f0f0f0 !important;
 }
+
+/* เช้า-เย็นเลขตรงกัน */
+.lottery-table .row-data.match-highlight,
+.theme-light .lottery-table .row-data.match-highlight {
+  background-color: #ffff00 !important;
+  color: #000 !important;
+}
 </style>
 </head>
 
@@ -716,6 +723,7 @@ function undoLottery() {
     if (cell.dataset.id && cell.dataset.id.startsWith('m')) applyHoliday(cell);
   });
   resyncStat();
+  checkDuplicateNumbers();
   saveLottery();
   updateUndoBtn();
 }
@@ -842,6 +850,7 @@ function clearMorningEvening() {
     }
   });
   resyncStat();
+  checkDuplicateNumbers();
   saveLottery();
 }
 
@@ -923,6 +932,7 @@ document.addEventListener('input', e => {
   if (e.target.hasAttribute('contenteditable')) {
     applyHoliday(e.target);
     resyncStat();
+    checkDuplicateNumbers();
     if (e.target.dataset.id === 'main-title') syncDate();
     saveLottery();
   }
@@ -951,6 +961,20 @@ function resyncStat() {
   });
 }
 
+// Highlight เช้า-เย็นถ้าเลขตรงกัน
+function checkDuplicateNumbers() {
+  for (let day = 1; day <= 31; day++) {
+    const am = document.querySelector(`[data-id="m${day}a"]`);
+    const pm = document.querySelector(`[data-id="m${day}e"]`);
+    if (!am || !pm) continue;
+    const n1 = parseInt(am.textContent.trim(), 10);
+    const n2 = parseInt(pm.textContent.trim(), 10);
+    const isMatch = !isNaN(n1) && !isNaN(n2) && n1 === n2;
+    am.classList.toggle('match-highlight', isMatch);
+    pm.classList.toggle('match-highlight', isMatch);
+  }
+}
+
 // ===== THEME TOGGLE =====
 function toggleTheme() {
   const lc = document.querySelector('.lottery-container');
@@ -976,6 +1000,7 @@ function applyTheme() {
 loadLottery();
 applyTheme();
 resyncStat();
+checkDuplicateNumbers();
 // Re-apply holiday merges after load
 document.querySelectorAll('[data-id$="a"]').forEach(cell => {
   if (cell.dataset.id && cell.dataset.id.startsWith('m')) applyHoliday(cell);
