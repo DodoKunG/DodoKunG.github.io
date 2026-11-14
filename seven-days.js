@@ -63,6 +63,26 @@
     return state.rows[date] || {};
   }
 
+  function endDate() {
+    const value = state.endDate;
+    if (typeof value === 'string' && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(value)) {
+      const parsed = new Date(value + 'T00:00:00Z');
+      if (!isNaN(parsed) && parsed.toISOString().slice(0, 10) === value) return value;
+    }
+    return bangkokToday();
+  }
+
+  function chooseEndDate(value) {
+    pushWeeklyUndo();
+    state.endDate = value;
+    saveData(); root.renderSevenDays();
+  }
+  document.getElementById('weekly-end-date').addEventListener('change', event => {
+    if (!event.target.value || !event.target.validity.valid) { event.target.value = endDate(); return; }
+    chooseEndDate(event.target.value);
+  });
+  root.useTodaySevenDays = function () { chooseEndDate(''); };
+
   function dateLabel(date) {
     const [year, month, day] = date.split('-').map(Number);
     return day + '/' + month + '/' + (year + 543);
@@ -71,7 +91,8 @@
   root.renderSevenDays = function () {
     const body = document.getElementById('weekly-body');
     if (!body) return;
-    const summary = summarizeSevenDays(bangkokToday(), readDay);
+    const summary = summarizeSevenDays(endDate(), readDay);
+    document.getElementById('weekly-end-date').value = endDate();
     document.getElementById('weekly-range').textContent = dateLabel(summary.rows[0].date) + ' – ' + dateLabel(summary.rows[6].date);
     document.getElementById('weekly-heading').textContent = state.title || 'ตารางย้อนหลัง 7 วัน';
     body.replaceChildren();
@@ -96,7 +117,7 @@
   };
 
   function refreshWeeklySummary() {
-    const summary = summarizeSevenDays(bangkokToday(), readDay);
+    const summary = summarizeSevenDays(endDate(), readDay);
     summary.rows.forEach(row => {
       const am = document.querySelector('[data-weekly-date="' + row.date + '"][data-weekly-slot="morning"]');
       const pm = document.querySelector('[data-weekly-date="' + row.date + '"][data-weekly-slot="evening"]');
@@ -137,9 +158,9 @@
     saveData(); root.renderSevenDays();
   };
   root.clearSevenDays = function () {
-    if (!confirm('ล้างเฉพาะผลเช้า–เย็นในตาราง 7 วันนี้? ตารางเดิมจะไม่เปลี่ยน')) return;
+    if (!confirm('ล้างเฉพาะผลเช้า–เย็นในช่วง 7 วันที่แสดงนี้? ตารางเดิมจะไม่เปลี่ยน')) return;
     pushWeeklyUndo();
-    sevenDates(bangkokToday()).forEach(date => delete state.rows[date]);
+    sevenDates(endDate()).forEach(date => delete state.rows[date]);
     saveData(); root.renderSevenDays();
   };
   root.toggleSevenDaysTheme = function () {
@@ -156,7 +177,7 @@
       const element = document.getElementById('weekly-capture');
       const canvas = await html2canvas(element, { scale: Math.max(2, 1600 / element.offsetWidth), backgroundColor: null });
       const link = document.createElement('a');
-      link.download = 'wangpring_7days_' + bangkokToday() + '.png';
+      link.download = 'wangpring_7days_' + endDate() + '.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (_) {
@@ -175,6 +196,6 @@
   let lastDate = bangkokToday();
   window.setInterval(() => {
     const today = bangkokToday();
-    if (today !== lastDate) { lastDate = today; root.renderSevenDays(); }
+    if (today !== lastDate) { lastDate = today; if (!state.endDate) root.renderSevenDays(); }
   }, 60000);
 })(globalThis);
