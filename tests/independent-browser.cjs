@@ -12,6 +12,18 @@ const fs = require('node:fs');
     await page.addInitScript(() => localStorage.setItem('lottery_wp_11_2569', JSON.stringify({text_m14a:'36',text_m14e:'35'})));
     await page.goto(process.env.WEEKLY_URL || pathToFileURL(require('node:path').resolve(__dirname, '..', 'index.html')).href);
     await page.waitForFunction(() => document.querySelectorAll('#weekly-body tr').length === 7);
+    await page.locator('#weekly-end-date').focus();
+    await page.evaluate(() => {
+      const input = document.getElementById('weekly-end-date');
+      input.value = '2026-11-13';
+      window.dispatchEvent(new Event('focus'));
+      input.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+    assert.equal(await page.locator('#weekly-range').textContent(),'7/11/2569 – 13/11/2569');
+    await page.evaluate(() => { document.getElementById('weekly-end-date').value = '2026-11-12'; });
+    await page.locator('#weekly-apply-date').click();
+    assert.equal(await page.locator('#weekly-range').textContent(),'6/11/2569 – 12/11/2569');
+    await page.locator('#weekly-today').click();
     assert.equal(await page.locator('#weekly-drawn-count').textContent(),'0');
     const monthlyBefore = await page.locator('#lottery-main').innerHTML();
     const monthStorage = await page.evaluate(() => localStorage.getItem('lottery_wp_11_2569'));

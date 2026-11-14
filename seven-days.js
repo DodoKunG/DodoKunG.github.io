@@ -73,14 +73,18 @@
   }
 
   function chooseEndDate(value) {
+    if (state.endDate === value) return;
     pushWeeklyUndo();
     state.endDate = value;
     saveData(); root.renderSevenDays();
   }
-  document.getElementById('weekly-end-date').addEventListener('change', event => {
-    if (!event.target.value || !event.target.validity.valid) { event.target.value = endDate(); return; }
-    chooseEndDate(event.target.value);
-  });
+  const dateInput = document.getElementById('weekly-end-date');
+  root.applySevenDaysDate = function () {
+    if (!dateInput.value || !dateInput.validity.valid) return;
+    chooseEndDate(dateInput.value);
+  };
+  dateInput.addEventListener('input', root.applySevenDaysDate);
+  dateInput.addEventListener('change', root.applySevenDaysDate);
   root.useTodaySevenDays = function () { chooseEndDate(''); };
 
   function dateLabel(date) {
@@ -188,10 +192,13 @@
   };
 
   function reloadWeekly() { state = loadData(); root.renderSevenDays(); }
+  function reloadUnlessChoosingDate() {
+    if (document.activeElement !== dateInput) reloadWeekly();
+  }
   window.addEventListener('storage', event => { if (event.key === STORE_KEY || event.key === null) reloadWeekly(); });
-  window.addEventListener('focus', reloadWeekly);
+  window.addEventListener('focus', reloadUnlessChoosingDate);
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) reloadWeekly();
+    if (!document.hidden) reloadUnlessChoosingDate();
   });
   let lastDate = bangkokToday();
   window.setInterval(() => {
