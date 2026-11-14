@@ -1,14 +1,10 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { sevenDates, summarizeSevenDays, monthKeys } = require('../seven-days.js');
+const { sevenDates, summarizeSevenDays } = require('../seven-days.js');
 
 test('seven days include today and cross month/year boundaries', () => {
   assert.deepEqual(sevenDates('2027-01-03'), ['2026-12-28','2026-12-29','2026-12-30','2026-12-31','2027-01-01','2027-01-02','2027-01-03']);
   assert.equal(sevenDates('2024-03-01')[5], '2024-02-29');
-});
-
-test('monthly storage supports Buddhist, short and Gregorian years', () => {
-  assert.deepEqual(monthKeys('2026-11-14'), ['lottery_wp_11_2569','lottery_wp_11_69','lottery_wp_11_2026']);
 });
 
 test('statistics use only seven days and ignore evening on a holiday', () => {

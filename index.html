@@ -469,6 +469,10 @@ h1 { font-size: 2rem; }
 .week-light { background: white; color: #111; border: 1px solid #333; }
 .week-light .weekly-table thead { background: #90ee90; color: #111; }
 #weekly-download { margin: 16px auto 0; }
+.weekly-table td:empty::before { content: '—'; color: #999; pointer-events: none; }
+.weekly-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
+.weekly-controls button { padding: 12px 18px; }
+.weekly-controls #weekly-download { margin: 0; }
 </style>
 </head>
 
@@ -563,10 +567,10 @@ h1 { font-size: 2rem; }
   </div>
 </div>
 
-<!-- สรุปจากข้อมูลรายเดือนเดิม โดยไม่แก้ไขข้อมูลต้นฉบับ -->
+<!-- ตารางคนละชุดข้อมูลกับตารางรายเดือน -->
 <section class="lottery-container weekly-container" aria-labelledby="weekly-heading">
   <div id="weekly-capture" class="weekly-capture">
-    <h2 id="weekly-heading">ผลย้อนหลัง 7 วัน</h2>
+    <h2 id="weekly-heading" contenteditable="true" aria-label="ชื่อตาราง 7 วัน">ตารางย้อนหลัง 7 วัน</h2>
     <p id="weekly-range" class="weekly-range"></p>
     <table class="weekly-table" aria-label="ผลเช้าและเย็นย้อนหลัง 7 วันรวมวันนี้">
       <thead><tr><th scope="col">วันที่</th><th scope="col">เช้า</th><th scope="col">เย็น</th></tr></thead>
@@ -579,8 +583,13 @@ h1 { font-size: 2rem; }
       <p id="weekly-undrawn"></p>
     </div>
   </div>
-  <p class="weekly-note">รวมวันนี้และ 6 วันก่อนหน้า ตามเวลาไทย อัปเดตจากตารางรายเดือนที่กรอกไว้ในเครื่องนี้ ช่อง — หมายถึงยังไม่มีข้อมูล ไม่ได้นับเป็นวันหยุด</p>
-  <button id="weekly-download" class="download-btn" onclick="downloadSevenDays()">💾 บันทึกตาราง 7 วันเป็นรูปภาพ</button>
+  <p class="weekly-note">ตารางแยก: แตะชื่อหรือช่องเช้า–เย็นเพื่อกรอกข้อมูลของตารางนี้ รวมวันนี้และ 6 วันก่อนหน้าตามเวลาไทย บันทึกอัตโนมัติในเครื่องนี้ ไม่ใช้ข้อมูลร่วมกับตารางด้านบน</p>
+  <div class="weekly-controls">
+    <button id="weekly-theme" class="download-btn" onclick="toggleSevenDaysTheme()">☀️ ธีมขาว</button>
+    <button id="weekly-undo" class="download-btn" onclick="undoSevenDays()" disabled>↩️ ย้อนกลับ</button>
+    <button id="weekly-clear" class="btn-clear" onclick="clearSevenDays()">🗑️ ล้าง 7 วัน</button>
+    <button id="weekly-download" class="download-btn" onclick="downloadSevenDays()">💾 บันทึกตาราง 7 วันเป็นรูปภาพ</button>
+  </div>
 </section>
 
 <script src="seven-days.js"></script>
@@ -785,7 +794,6 @@ function saveLottery() {
     data['class_' + el.dataset.id] = el.className;
   });
   localStorage.setItem(getStoreKey(), JSON.stringify(data));
-  renderSevenDays();
 }
 
 function loadLottery() {
@@ -932,6 +940,7 @@ function syncDate() {
 }
 
 document.addEventListener('focus', e => {
+  if (e.target.closest('.weekly-container')) return;
   if (e.target.hasAttribute('contenteditable')) {
     pushUndo();
   }
@@ -966,6 +975,7 @@ function resetStat() {
 
 // Auto-save on edit + check holiday + sync date + sync stat
 document.addEventListener('input', e => {
+  if (e.target.closest('.weekly-container')) return;
   if (e.target.hasAttribute('contenteditable')) {
     applyHoliday(e.target);
     resyncStat();
@@ -1022,7 +1032,6 @@ function toggleTheme() {
     ? 'linear-gradient(135deg,#222,#555)'
     : 'linear-gradient(135deg,#555,#888)';
   localStorage.setItem('lottery_theme', isLight ? 'light' : 'dark');
-  renderSevenDays();
 }
 
 function applyTheme() {

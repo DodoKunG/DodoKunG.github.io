@@ -10,12 +10,6 @@
     });
   }
 
-  function monthKeys(date) {
-    const [year, month] = date.split('-').map(Number);
-    const prefix = 'lottery_wp_' + String(month).padStart(2, '0') + '_';
-    return [prefix + (year + 543), prefix + String(year + 543).slice(-2), prefix + year];
-  }
-
   function summarizeSevenDays(endDate, readDay) {
     const used = new Set();
     const rows = sevenDates(endDate).map(date => {
@@ -32,9 +26,30 @@
     return { rows, drawn: all.filter(n => used.has(n)), undrawn: all.filter(n => !used.has(n)) };
   }
 
-  const api = { sevenDates, monthKeys, summarizeSevenDays };
+  const api = { sevenDates, summarizeSevenDays };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (!root.document) return;
+
+  const STORE_KEY = 'lottery_weekly_v1';
+  const undo = [];
+  function loadData() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORE_KEY));
+      if (saved && saved.rows && typeof saved.rows === 'object') return saved;
+    } catch (_) { /* เริ่มตารางว่างเมื่อยังไม่มีข้อมูลที่อ่านได้ */ }
+    return { rows: {}, title: 'ตารางย้อนหลัง 7 วัน', theme: 'dark' };
+  }
+  let state = loadData();
+
+  function saveData() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+    catch (_) { alert('บันทึกตาราง 7 วันไม่สำเร็จ กรุณาตรวจพื้นที่จัดเก็บของเบราว์เซอร์'); }
+  }
+
+  function pushWeeklyUndo() {
+    undo.push(JSON.stringify(state));
+    if (undo.length > 30) undo.shift();
+  }
 
   function bangkokToday() {
     const parts = new Intl.DateTimeFormat('en-CA', {
@@ -45,29 +60,7 @@
   }
 
   function readDay(date) {
-    const [year, month, day] = date.split('-').map(Number);
-    const title = document.querySelector('[data-id="main-title"]').textContent;
-    const period = title.match(/(\d{1,2})\/(\d{2,4})/);
-    if (period) {
-      let currentYear = Number(period[2]);
-      if (currentYear < 100) currentYear += 2500;
-      if (currentYear >= 2400) currentYear -= 543;
-      if (Number(period[1]) === month && currentYear === year) {
-        return {
-          morning: document.querySelector('[data-id="m' + day + 'a"]')?.textContent || '',
-          evening: document.querySelector('[data-id="m' + day + 'e"]')?.textContent || ''
-        };
-      }
-    }
-    for (const key of monthKeys(date)) {
-      try {
-        const raw = localStorage.getItem(key);
-        if (!raw) continue;
-        const data = JSON.parse(raw);
-        return { morning: data['text_m' + day + 'a'] || '', evening: data['text_m' + day + 'e'] || '' };
-      } catch (_) { /* ข้อมูลเดือนที่เสียหายแสดงเป็นช่องว่าง ไม่แก้ข้อมูลต้นฉบับ */ }
-    }
-    return {};
+    return state.rows[date] || {};
   }
 
   function dateLabel(date) {
@@ -80,7 +73,7 @@
     if (!body) return;
     const summary = summarizeSevenDays(bangkokToday(), readDay);
     document.getElementById('weekly-range').textContent = dateLabel(summary.rows[0].date) + ' – ' + dateLabel(summary.rows[6].date);
-    document.getElementById('weekly-capture').classList.toggle('week-light', document.querySelector('.lottery-container').classList.contains('theme-light'));
+    document.getElementById('weekly-heading').textContent = state.title || 'ตารางย้อนหลัง 7 วัน';
     body.replaceChildren();
     summary.rows.forEach(row => {
       const tr = document.createElement('tr');
@@ -88,20 +81,70 @@
       date.scope = 'row';
       date.textContent = dateLabel(row.date);
       tr.appendChild(date);
-      const results = row.holiday ? [row.morning] : [row.morning || '—', row.evening || '—'];
-      results.forEach(value => {
+      ['morning', 'evening'].forEach(slot => {
         const cell = document.createElement('td');
-        cell.textContent = value;
-        if (row.holiday) { cell.colSpan = 2; cell.className = 'week-holiday'; }
-        if (!row.holiday && /^[0-9]{1,2}$/.test(row.morning) && Number(row.morning) === Number(row.evening)) cell.className = 'week-match';
+        cell.textContent = row[slot];
+        cell.contentEditable = 'true';
+        cell.dataset.weeklyDate = row.date;
+        cell.dataset.weeklySlot = slot;
+        cell.setAttribute('aria-label', dateLabel(row.date) + (slot === 'morning' ? ' เช้า' : ' เย็น'));
         tr.appendChild(cell);
       });
       body.appendChild(tr);
+    });
+    refreshWeeklySummary();
+  };
+
+  function refreshWeeklySummary() {
+    const summary = summarizeSevenDays(bangkokToday(), readDay);
+    summary.rows.forEach(row => {
+      const am = document.querySelector('[data-weekly-date="' + row.date + '"][data-weekly-slot="morning"]');
+      const pm = document.querySelector('[data-weekly-date="' + row.date + '"][data-weekly-slot="evening"]');
+      if (!am || !pm) return;
+      am.colSpan = row.holiday ? 2 : 1;
+      pm.hidden = row.holiday;
+      am.classList.toggle('week-holiday', row.holiday);
+      const same = !row.holiday && /^[0-9]{1,2}$/.test(row.morning) && Number(row.morning) === Number(row.evening);
+      am.classList.toggle('week-match', same);
+      pm.classList.toggle('week-match', same);
     });
     ['drawn', 'undrawn'].forEach(type => {
       document.getElementById('weekly-' + type + '-count').textContent = summary[type].length;
       document.getElementById('weekly-' + type).textContent = summary[type].map(n => String(n).padStart(2, '0')).join(' · ') || 'ไม่มี';
     });
+    document.getElementById('weekly-capture').classList.toggle('week-light', state.theme === 'light');
+    document.getElementById('weekly-theme').textContent = state.theme === 'light' ? '🌙 ธีมดำ' : '☀️ ธีมขาว';
+    document.getElementById('weekly-undo').disabled = undo.length === 0;
+  }
+
+  document.querySelector('.weekly-container').addEventListener('focusin', event => {
+    if (event.target.isContentEditable) pushWeeklyUndo();
+  });
+  document.querySelector('.weekly-container').addEventListener('input', event => {
+    const cell = event.target;
+    if (cell.id === 'weekly-heading') state.title = cell.textContent.trim();
+    else if (cell.dataset.weeklyDate && cell.dataset.weeklySlot) {
+      const date = cell.dataset.weeklyDate;
+      state.rows[date] = { ...readDay(date), [cell.dataset.weeklySlot]: cell.textContent.trim() };
+    } else return;
+    saveData();
+    refreshWeeklySummary();
+  });
+
+  root.undoSevenDays = function () {
+    if (!undo.length) return;
+    state = JSON.parse(undo.pop());
+    saveData(); root.renderSevenDays();
+  };
+  root.clearSevenDays = function () {
+    if (!confirm('ล้างเฉพาะผลเช้า–เย็นในตาราง 7 วันนี้? ตารางเดิมจะไม่เปลี่ยน')) return;
+    pushWeeklyUndo();
+    sevenDates(bangkokToday()).forEach(date => delete state.rows[date]);
+    saveData(); root.renderSevenDays();
+  };
+  root.toggleSevenDaysTheme = function () {
+    state.theme = state.theme === 'light' ? 'dark' : 'light';
+    saveData(); refreshWeeklySummary();
   };
 
   root.downloadSevenDays = async function () {
@@ -123,10 +166,11 @@
     }
   };
 
-  window.addEventListener('storage', root.renderSevenDays);
-  window.addEventListener('focus', root.renderSevenDays);
+  function reloadWeekly() { state = loadData(); root.renderSevenDays(); }
+  window.addEventListener('storage', event => { if (event.key === STORE_KEY || event.key === null) reloadWeekly(); });
+  window.addEventListener('focus', reloadWeekly);
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) root.renderSevenDays();
+    if (!document.hidden) reloadWeekly();
   });
   let lastDate = bangkokToday();
   window.setInterval(() => {
