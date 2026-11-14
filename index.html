@@ -454,6 +454,21 @@ h1 { font-size: 2rem; }
   background-color: #ffff00 !important;
   color: #000 !important;
 }
+.weekly-note { margin: 16px 0; color: #555; line-height: 1.6; }
+.weekly-capture { background: #111; color: white; padding: 20px; border-radius: 12px; }
+.weekly-capture h2 { text-align: center; font-size: clamp(22px, 4vw, 32px); }
+.weekly-range { text-align: center; margin: 6px 0 16px; }
+.weekly-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.weekly-table th, .weekly-table td { border: 1px solid #777; padding: 10px 4px; text-align: center; font-size: clamp(16px, 3.2vw, 26px); }
+.weekly-table thead { background: #1a5c1a; color: white; }
+.weekly-table tbody th { font-weight: 400; font-size: clamp(14px, 2.8vw, 22px); }
+.weekly-table .week-holiday { background: #cd5c5c; color: white; }
+.weekly-table .week-match { background: #ffff00; color: #111; }
+.weekly-stats h3 { margin: 16px 0 6px; font-size: 18px; }
+.weekly-stats p { line-height: 1.8; overflow-wrap: anywhere; }
+.week-light { background: white; color: #111; border: 1px solid #333; }
+.week-light .weekly-table thead { background: #90ee90; color: #111; }
+#weekly-download { margin: 16px auto 0; }
 </style>
 </head>
 
@@ -548,6 +563,27 @@ h1 { font-size: 2rem; }
   </div>
 </div>
 
+<!-- สรุปจากข้อมูลรายเดือนเดิม โดยไม่แก้ไขข้อมูลต้นฉบับ -->
+<section class="lottery-container weekly-container" aria-labelledby="weekly-heading">
+  <div id="weekly-capture" class="weekly-capture">
+    <h2 id="weekly-heading">ผลย้อนหลัง 7 วัน</h2>
+    <p id="weekly-range" class="weekly-range"></p>
+    <table class="weekly-table" aria-label="ผลเช้าและเย็นย้อนหลัง 7 วันรวมวันนี้">
+      <thead><tr><th scope="col">วันที่</th><th scope="col">เช้า</th><th scope="col">เย็น</th></tr></thead>
+      <tbody id="weekly-body"></tbody>
+    </table>
+    <div class="weekly-stats">
+      <h3>ออกแล้วใน 7 วัน (<span id="weekly-drawn-count">0</span> เลข)</h3>
+      <p id="weekly-drawn"></p>
+      <h3>ยังไม่ออกใน 7 วัน (<span id="weekly-undrawn-count">36</span> เลข)</h3>
+      <p id="weekly-undrawn"></p>
+    </div>
+  </div>
+  <p class="weekly-note">รวมวันนี้และ 6 วันก่อนหน้า ตามเวลาไทย อัปเดตจากตารางรายเดือนที่กรอกไว้ในเครื่องนี้ ช่อง — หมายถึงยังไม่มีข้อมูล ไม่ได้นับเป็นวันหยุด</p>
+  <button id="weekly-download" class="download-btn" onclick="downloadSevenDays()">💾 บันทึกตาราง 7 วันเป็นรูปภาพ</button>
+</section>
+
+<script src="seven-days.js"></script>
 <script>
 function generateCards() {
   const input = document.getElementById('inputText').value;
@@ -749,6 +785,7 @@ function saveLottery() {
     data['class_' + el.dataset.id] = el.className;
   });
   localStorage.setItem(getStoreKey(), JSON.stringify(data));
+  renderSevenDays();
 }
 
 function loadLottery() {
@@ -985,6 +1022,7 @@ function toggleTheme() {
     ? 'linear-gradient(135deg,#222,#555)'
     : 'linear-gradient(135deg,#555,#888)';
   localStorage.setItem('lottery_theme', isLight ? 'light' : 'dark');
+  renderSevenDays();
 }
 
 function applyTheme() {
@@ -1007,6 +1045,7 @@ document.querySelectorAll('[data-id$="a"]').forEach(cell => {
 });
 updateUndoBtn();
 scaleTableToFit();
+renderSevenDays();
 window.addEventListener('resize', scaleTableToFit);
 </script>
 </body>
