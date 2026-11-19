@@ -454,27 +454,6 @@ h1 { font-size: 2rem; }
   background-color: #ffff00 !important;
   color: #000 !important;
 }
-.weekly-note { margin: 16px 0; color: #555; line-height: 1.6; }
-.weekly-capture { background: #111; color: white; padding: 20px; border-radius: 12px; }
-.weekly-capture h2 { text-align: center; font-size: clamp(22px, 4vw, 32px); }
-.weekly-range { text-align: center; margin: 6px 0 16px; }
-.weekly-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.weekly-table th, .weekly-table td { border: 1px solid #777; padding: 10px 4px; text-align: center; font-size: clamp(16px, 3.2vw, 26px); }
-.weekly-table thead { background: #1a5c1a; color: white; }
-.weekly-table tbody th { font-weight: 400; font-size: clamp(14px, 2.8vw, 22px); }
-.weekly-table .week-holiday { background: #cd5c5c; color: white; }
-.weekly-table .week-match { background: #ffff00; color: #111; }
-.weekly-stats h3 { margin: 16px 0 6px; font-size: 18px; }
-.weekly-stats p { line-height: 1.8; overflow-wrap: anywhere; }
-.week-light { background: white; color: #111; border: 1px solid #333; }
-.week-light .weekly-table thead { background: #90ee90; color: #111; }
-#weekly-download { margin: 16px auto 0; }
-.weekly-table td:empty::before { content: '—'; color: #999; pointer-events: none; }
-.weekly-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
-.weekly-controls button { padding: 12px 18px; }
-.weekly-controls #weekly-download { margin: 0; }
-.weekly-date-controls { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-.weekly-date-controls input { min-height: 44px; padding: 8px 12px; border: 1px solid #aaa; border-radius: 8px; font: inherit; max-width: 100%; }
 </style>
 </head>
 
@@ -569,38 +548,6 @@ h1 { font-size: 2rem; }
   </div>
 </div>
 
-<!-- ตารางคนละชุดข้อมูลกับตารางรายเดือน -->
-<section class="lottery-container weekly-container" aria-labelledby="weekly-heading">
-  <div class="weekly-date-controls">
-    <label for="weekly-end-date">วันสุดท้ายของตาราง</label>
-    <input id="weekly-end-date" type="date">
-    <button id="weekly-apply-date" class="download-btn" onclick="applySevenDaysDate()">ใช้วันที่นี้</button>
-    <button id="weekly-today" class="download-btn" onclick="useTodaySevenDays()">📅 วันนี้</button>
-  </div>
-  <div id="weekly-capture" class="weekly-capture">
-    <h2 id="weekly-heading" contenteditable="true" aria-label="ชื่อตาราง 7 วัน">ตารางย้อนหลัง 7 วัน</h2>
-    <p id="weekly-range" class="weekly-range"></p>
-    <table class="weekly-table" aria-label="ผลเช้าและเย็นย้อนหลัง 7 วันจากวันที่เลือก">
-      <thead><tr><th scope="col">วันที่</th><th scope="col">เช้า</th><th scope="col">เย็น</th></tr></thead>
-      <tbody id="weekly-body"></tbody>
-    </table>
-    <div class="weekly-stats">
-      <h3>ออกแล้วใน 7 วัน (<span id="weekly-drawn-count">0</span> เลข)</h3>
-      <p id="weekly-drawn"></p>
-      <h3>ยังไม่ออกใน 7 วัน (<span id="weekly-undrawn-count">36</span> เลข)</h3>
-      <p id="weekly-undrawn"></p>
-    </div>
-  </div>
-  <p class="weekly-note">เลือกวันสุดท้ายเพื่อแสดงย้อนหลัง 7 วัน หรือกด “วันนี้” เพื่อเลื่อนช่วงวันอัตโนมัติ แตะชื่อหรือช่องเช้า–เย็นเพื่อกรอกข้อมูล บันทึกแยกในเครื่องนี้ ไม่ใช้ข้อมูลร่วมกับตารางด้านบน และไม่ลบผลเดิมเมื่อเปลี่ยนช่วงวัน</p>
-  <div class="weekly-controls">
-    <button id="weekly-theme" class="download-btn" onclick="toggleSevenDaysTheme()">☀️ ธีมขาว</button>
-    <button id="weekly-undo" class="download-btn" onclick="undoSevenDays()" disabled>↩️ ย้อนกลับ</button>
-    <button id="weekly-clear" class="btn-clear" onclick="clearSevenDays()">🗑️ ล้าง 7 วัน</button>
-    <button id="weekly-download" class="download-btn" onclick="downloadSevenDays()">💾 บันทึกตาราง 7 วันเป็นรูปภาพ</button>
-  </div>
-</section>
-
-<script src="seven-days.js"></script>
 <script>
 function generateCards() {
   const input = document.getElementById('inputText').value;
@@ -948,7 +895,6 @@ function syncDate() {
 }
 
 document.addEventListener('focus', e => {
-  if (e.target.closest('.weekly-container')) return;
   if (e.target.hasAttribute('contenteditable')) {
     pushUndo();
   }
@@ -983,7 +929,6 @@ function resetStat() {
 
 // Auto-save on edit + check holiday + sync date + sync stat
 document.addEventListener('input', e => {
-  if (e.target.closest('.weekly-container')) return;
   if (e.target.hasAttribute('contenteditable')) {
     applyHoliday(e.target);
     resyncStat();
@@ -1062,7 +1007,6 @@ document.querySelectorAll('[data-id$="a"]').forEach(cell => {
 });
 updateUndoBtn();
 scaleTableToFit();
-renderSevenDays();
 window.addEventListener('resize', scaleTableToFit);
 </script>
 </body>
